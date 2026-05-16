@@ -1,0 +1,19 @@
+MATA_KULIAH_LIST = [
+    {"kode": "MK001", "nama": "Algoritma & Pemrograman",   "sks": 3},
+    {"kode": "MK002", "nama": "Basis Data",                "sks": 3},
+    {"kode": "MK003", "nama": "Pemrograman Web",           "sks": 3},
+    {"kode": "MK004", "nama": "Jaringan Komputer",         "sks": 3},
+    {"kode": "MK005", "nama": "Sistem Operasi",            "sks": 3},
+    {"kode": "MK006", "nama": "Rekayasa Perangkat Lunak",  "sks": 3},
+    {"kode": "MK007", "nama": "Kecerdasan Buatan",         "sks": 3},
+    {"kode": "MK008", "nama": "Keamanan Sistem",           "sks": 2},
+    {"kode": "MK009", "nama": "Statistika & Probabilitas", "sks": 2},
+    {"kode": "MK010", "nama": "Matematika Diskrit",        "sks": 2},
+    {"kode": "MK011", "nama": "Etika Profesi",             "sks": 2},
+    {"kode": "MK012", "nama": "Skripsi / Tugas Akhir",     "sks": 6},
+]
+
+VALID_MK_KODE = {mk["kode"] for mk in MATA_KULIAH_LIST}
+MK_BY_KODE    = {mk["kode"]: mk for mk in MATA_KULIAH_LIST}
+
+MAX_SKS = 24
