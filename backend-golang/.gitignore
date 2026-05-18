@@ -1,0 +1,10 @@
+# Environment
+.env
+
+# Build output
+app
+app.exe
+tmp/
+
+# Go workspace
+vendor/

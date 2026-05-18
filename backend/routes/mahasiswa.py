@@ -5,6 +5,7 @@ from sqlalchemy.orm.attributes import flag_modified
 from models import db, Mahasiswa
 from utils.decorators import mahasiswa_required
 from utils.helpers import success_response, error_response
+from utils.cache import delete_cache
 from constants import MATA_KULIAH_LIST, VALID_MK_KODE, MK_BY_KODE, MAX_SKS
 
 mahasiswa_bp = Blueprint("mahasiswa", __name__)
@@ -86,6 +87,9 @@ def update_krs():
     mhs.mata_kuliah = merged
     flag_modified(mhs, "mata_kuliah")  # force SQLAlchemy to detect JSONB change
     db.session.commit()
+
+    if mhs.dosen_pa_id:
+        delete_cache(f"krs:dosen:{mhs.dosen_pa_id}:bimbingan")
 
     return success_response(
         {"mata_kuliah": mhs.mata_kuliah, "total_sks": total_sks},
