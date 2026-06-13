@@ -124,9 +124,16 @@ export default function Sidebar() {
             </ul>
           </div>
 
-          {/* Right — user avatar + dropdown */}
+          {/* Right — notification + user avatar */}
           <div className="ms-auto">
             <ul className="list-unstyled">
+              {/* Notification bell */}
+              <li className="pc-h-item">
+                <a href="#" className="pc-head-link" onClick={(e) => e.preventDefault()}>
+                  <i className="ti ti-bell" />
+                </a>
+              </li>
+
               <li className="dropdown pc-h-item header-user-profile">
                 <a
                   className="pc-head-link dropdown-toggle arrow-none me-0 d-flex align-items-center gap-2"
