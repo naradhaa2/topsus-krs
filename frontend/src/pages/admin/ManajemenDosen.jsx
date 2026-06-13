@@ -48,10 +48,7 @@ export default function ManajemenDosen() {
 
   useEffect(() => { fetchData() }, [fetchData])
 
-  const handleSearch = (value) => {
-    setSearch(value)
-    setPage(1)
-  }
+  const handleSearch = (value) => { setSearch(value); setPage(1) }
 
   const openCreate = () => { setEditData(null); setForm(INIT_FORM); setFormErrors({}); setModalOpen(true) }
   const openEdit   = (row) => {
@@ -88,7 +85,6 @@ export default function ManajemenDosen() {
   }
 
   const setF = (key) => (e) => { setForm((f) => ({ ...f, [key]: e.target.value })); setFormErrors((er) => ({ ...er, [key]: '' })) }
-  const iCls = (key) => `w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors[key] ? 'border-red-400' : 'border-slate-300'}`
 
   const columns = [
     { key: 'nidn',    label: 'NIDN' },
@@ -98,69 +94,86 @@ export default function ManajemenDosen() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
-        <div className="flex items-center justify-between mb-6">
+      <main className="pc-content">
+        <div className="page-header">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Manajemen Dosen</h1>
-            <p className="text-slate-500 text-sm mt-1">Total {total} dosen terdaftar</p>
+            <h1>Manajemen Dosen</h1>
+            <p className="sub mb-0">Total {total} dosen terdaftar</p>
           </div>
-          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-xl text-sm font-medium hover:bg-blue-800 transition-colors">
-            <Plus className="w-4 h-4" /> Tambah Dosen
+          <button onClick={openCreate} className="btn btn-primary d-flex align-items-center gap-2" style={{ borderRadius: 10 }}>
+            <Plus size={16} /> Tambah Dosen
           </button>
         </div>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input value={search} onChange={(e) => handleSearch(e.target.value)} placeholder="Cari nama atau NIDN..."
-            className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+        <div className="card mb-3" style={{ borderRadius: 10, border: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+          <div className="card-body py-2 px-3">
+            <div className="search-wrapper">
+              <Search size={15} className="search-icon" />
+              <input
+                type="text"
+                className="form-control border-0 shadow-none"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Cari nama atau NIDN..."
+                style={{ borderRadius: 8 }}
+              />
+            </div>
+          </div>
         </div>
 
-        <Table columns={columns} data={data} onEdit={openEdit} onDelete={handleDelete} isLoading={isLoading} emptyMessage="Tidak ada dosen ditemukan" />
+        <Table
+          columns={columns}
+          data={data}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          isLoading={isLoading}
+          emptyMessage="Tidak ada dosen ditemukan"
+        />
 
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-4">
-            <p className="text-sm text-slate-500">Halaman {page} dari {totalPages}</p>
-            <div className="flex gap-2">
-              <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
-                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Sebelumnya</button>
-              <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Selanjutnya</button>
+          <div className="d-flex align-items-center justify-content-between mt-3">
+            <span className="text-muted" style={{ fontSize: '0.85rem' }}>Halaman {page} dari {totalPages}</span>
+            <div className="d-flex gap-2">
+              <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: 8 }} onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}>Sebelumnya</button>
+              <button className="btn btn-sm btn-outline-secondary" style={{ borderRadius: 8 }} onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}>Selanjutnya</button>
             </div>
           </div>
         )}
 
-        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
           title={editData ? 'Edit Dosen' : 'Tambah Dosen'}
-          onSubmit={handleSubmit} isLoading={isSaving}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-              <input className={iCls('nama')} value={form.nama} onChange={setF('nama')} placeholder="Nama lengkap dosen" />
-              {formErrors.nama && <p className="text-red-500 text-xs mt-1">{formErrors.nama}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">NIDN</label>
-              <input className={iCls('nidn')} value={form.nidn} onChange={setF('nidn')} placeholder="Nomor Induk Dosen Nasional" />
-              {formErrors.nidn && <p className="text-red-500 text-xs mt-1">{formErrors.nidn}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input type="email" className={iCls('email')} value={form.email} onChange={setF('email')} placeholder="email@example.com" />
-              {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Password {editData && <span className="font-normal text-slate-400">(kosongkan jika tidak diubah)</span>}
-              </label>
-              <input type="password" className={iCls('password')} value={form.password} onChange={setF('password')} placeholder="••••••••" />
-              {formErrors.password && <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">No. Telepon <span className="font-normal text-slate-400">(opsional)</span></label>
-              <input className={iCls('no_telp')} value={form.no_telp} onChange={setF('no_telp')} placeholder="08xxxxxxxxxx" />
-            </div>
+          onSubmit={handleSubmit}
+          isLoading={isSaving}
+        >
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Nama Lengkap</label>
+            <input className={`form-control${formErrors.nama ? ' is-invalid' : ''}`} value={form.nama} onChange={setF('nama')} placeholder="Nama lengkap dosen" style={{ borderRadius: 8 }} />
+            {formErrors.nama && <div className="invalid-feedback">{formErrors.nama}</div>}
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>NIDN</label>
+            <input className={`form-control${formErrors.nidn ? ' is-invalid' : ''}`} value={form.nidn} onChange={setF('nidn')} placeholder="Nomor Induk Dosen Nasional" style={{ borderRadius: 8 }} />
+            {formErrors.nidn && <div className="invalid-feedback">{formErrors.nidn}</div>}
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Email</label>
+            <input type="email" className={`form-control${formErrors.email ? ' is-invalid' : ''}`} value={form.email} onChange={setF('email')} placeholder="email@example.com" style={{ borderRadius: 8 }} />
+            {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>
+              Password {editData && <span className="fw-normal text-muted">(kosongkan jika tidak diubah)</span>}
+            </label>
+            <input type="password" className={`form-control${formErrors.password ? ' is-invalid' : ''}`} value={form.password} onChange={setF('password')} placeholder="••••••••" style={{ borderRadius: 8 }} />
+            {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
+          </div>
+          <div className="mb-1">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>No. Telepon <span className="fw-normal text-muted">(opsional)</span></label>
+            <input className="form-control" value={form.no_telp} onChange={setF('no_telp')} placeholder="08xxxxxxxxxx" style={{ borderRadius: 8 }} />
           </div>
         </Modal>
       </main>

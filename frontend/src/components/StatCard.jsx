@@ -1,22 +1,23 @@
-const colorMap = {
-  blue:    'bg-blue-50 text-blue-700',
-  emerald: 'bg-emerald-50 text-emerald-700',
-  amber:   'bg-amber-50 text-amber-700',
-  rose:    'bg-rose-50 text-rose-700',
+const iconVariant = {
+  blue:    'icon-primary',
+  emerald: 'icon-success',
+  amber:   'icon-warning',
+  rose:    'icon-danger',
+  info:    'icon-info',
 }
 
 export default function StatCard({ title, value, icon: Icon, color = 'blue', subtitle }) {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-      <div className="flex items-start justify-between">
+    <div className="card stat-card h-100">
+      <div className="card-body d-flex align-items-start justify-content-between p-4">
         <div>
-          <p className="text-sm font-medium text-slate-500">{title}</p>
-          <p className="text-3xl font-bold text-slate-800 mt-1">{value}</p>
-          {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+          <p className="stat-label mb-1">{title}</p>
+          <p className="stat-value mb-0">{value}</p>
+          {subtitle && <p className="stat-sub mb-0 mt-1">{subtitle}</p>}
         </div>
         {Icon && (
-          <div className={`p-3 rounded-xl ${colorMap[color] || colorMap.blue}`}>
-            <Icon className="w-6 h-6" />
+          <div className={`stat-icon ${iconVariant[color] || 'icon-primary'}`}>
+            <Icon size={22} />
           </div>
         )}
       </div>

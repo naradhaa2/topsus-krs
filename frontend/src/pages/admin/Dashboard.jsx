@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react'
 import { GraduationCap, Users, BookOpen, BarChart2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
+} from 'recharts'
 import Sidebar from '../../components/Sidebar'
 import StatCard from '../../components/StatCard'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api from '../../services/api'
 
+const CHART_COLORS = ['#4680ff', '#2ca87f', '#e58a00', '#dc2626', '#3ec9d6', '#673ab7']
+
 export default function Dashboard() {
-  const [stats, setStats]     = useState(null)
+  const [stats,    setStats]    = useState(null)
   const [dosenDist, setDosenDist] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([
       api.get('/api/admin/dashboard'),
-      api.get('/api/admin/dosen', { params: { per_page: 100 } }),
+      api.get('/api/admin/dosen',     { params: { per_page: 100 } }),
       api.get('/api/admin/mahasiswa', { params: { per_page: 100 } }),
     ])
       .then(([dashRes, dosenRes, mhsRes]) => {
@@ -33,79 +38,137 @@ export default function Dashboard() {
       .finally(() => setIsLoading(false))
   }, [])
 
+  if (isLoading) {
+    return (
+      <div className="pc-container">
+        <Sidebar />
+        <div className="pc-content"><LoadingSpinner /></div>
+      </div>
+    )
+  }
+
+  const chartData = stats?.distribusi_jurusan?.map((item) => ({
+    name:  item.jurusan,
+    total: item.total,
+  })) ?? []
+
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-6">Dashboard</h1>
+      <main className="pc-content">
+        {/* Page header */}
+        <div className="page-header">
+          <div>
+            <h1>Dashboard</h1>
+            <p className="sub mb-0">Ringkasan data Sistem KRS</p>
+          </div>
+        </div>
 
-        {isLoading ? <LoadingSpinner /> : (
-          <>
-            {/* Stat cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-              <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}    icon={GraduationCap} color="blue" />
-              <StatCard title="Total Dosen"     value={stats?.total_dosen ?? 0}        icon={Users}         color="emerald" />
-              <StatCard title="Rata-rata SKS"   value={stats?.rata_rata_sks ?? 0}      icon={BookOpen}      color="amber" subtitle="per mahasiswa" />
-              <StatCard title="Jumlah Jurusan"  value={stats?.distribusi_jurusan?.length ?? 0} icon={BarChart2} color="rose" />
-            </div>
+        {/* Stat cards */}
+        <div className="row g-3 mb-4">
+          <div className="col-6 col-xl-3">
+            <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}           icon={GraduationCap} color="blue" />
+          </div>
+          <div className="col-6 col-xl-3">
+            <StatCard title="Total Dosen"     value={stats?.total_dosen ?? 0}               icon={Users}         color="emerald" />
+          </div>
+          <div className="col-6 col-xl-3">
+            <StatCard title="Rata-rata SKS"   value={stats?.rata_rata_sks ?? 0}             icon={BookOpen}      color="amber" subtitle="per mahasiswa" />
+          </div>
+          <div className="col-6 col-xl-3">
+            <StatCard title="Jumlah Jurusan"  value={stats?.distribusi_jurusan?.length ?? 0} icon={BarChart2}     color="rose" />
+          </div>
+        </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Distribusi per jurusan */}
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <h2 className="font-semibold text-slate-800 mb-5">Mahasiswa per Jurusan</h2>
-                <div className="space-y-4">
+        <div className="row g-4">
+          {/* Bar chart — distribusi per jurusan */}
+          <div className="col-lg-6">
+            <div className="card chart-card h-100">
+              <div className="card-header">Mahasiswa per Jurusan</div>
+              <div className="card-body">
+                {chartData.length === 0 ? (
+                  <p className="text-muted text-center py-4">Belum ada data</p>
+                ) : (
+                  <ResponsiveContainer width="100%" height={220}>
+                    <BarChart data={chartData} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e7eaee" vertical={false} />
+                      <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#5b6b79' }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 12, fill: '#5b6b79' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                      <Tooltip
+                        contentStyle={{ borderRadius: 8, border: '1px solid #e7eaee', fontSize: 13 }}
+                        formatter={(v) => [v, 'Mahasiswa']}
+                      />
+                      <Bar dataKey="total" radius={[6, 6, 0, 0]}>
+                        {chartData.map((_, i) => (
+                          <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />
+                        ))}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                )}
+
+                {/* Progress bar detail */}
+                <div className="mt-3">
                   {stats?.distribusi_jurusan?.map((item) => {
                     const pct = stats.total_mahasiswa > 0
                       ? Math.round((item.total / stats.total_mahasiswa) * 100)
                       : 0
                     return (
-                      <div key={item.jurusan}>
-                        <div className="flex justify-between text-sm mb-1.5">
-                          <span className="text-slate-700 font-medium">{item.jurusan}</span>
-                          <span className="text-slate-500">{item.total} mhs ({pct}%)</span>
+                      <div key={item.jurusan} className="mb-3">
+                        <div className="d-flex justify-content-between mb-1" style={{ fontSize: '0.825rem' }}>
+                          <span className="fw-medium" style={{ color: '#1d2630' }}>{item.jurusan}</span>
+                          <span className="text-muted">{item.total} mhs ({pct}%)</span>
                         </div>
-                        <div className="w-full bg-slate-100 rounded-full h-2.5">
-                          <div className="bg-blue-600 h-2.5 rounded-full transition-all" style={{ width: `${pct}%` }} />
+                        <div className="progress">
+                          <div
+                            className="progress-bar"
+                            style={{ width: `${pct}%`, background: 'var(--pc-primary)', borderRadius: '50rem' }}
+                          />
                         </div>
                       </div>
                     )
                   })}
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Distribusi per dosen PA */}
-              <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="p-5 border-b border-slate-200">
-                  <h2 className="font-semibold text-slate-800">Mahasiswa per Dosen PA</h2>
-                </div>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead>
-                      <tr className="bg-slate-50 border-b border-slate-100">
-                        <th className="px-4 py-3 text-left font-semibold text-slate-600">Dosen</th>
-                        <th className="px-4 py-3 text-left font-semibold text-slate-600">NIDN</th>
-                        <th className="px-4 py-3 text-left font-semibold text-slate-600">Jumlah Bimbingan</th>
+          {/* Table — distribusi per dosen PA */}
+          <div className="col-lg-6">
+            <div className="card chart-card h-100">
+              <div className="card-header">Mahasiswa per Dosen PA</div>
+              <div className="table-responsive">
+                <table className="table table-hover mb-0" style={{ fontSize: '0.875rem' }}>
+                  <thead>
+                    <tr>
+                      <th style={{ background: '#f8f9fa', color: '#5b6b79', fontWeight: 600, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '12px 16px', borderBottom: '1px solid #e7eaee' }}>Dosen</th>
+                      <th style={{ background: '#f8f9fa', color: '#5b6b79', fontWeight: 600, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '12px 16px', borderBottom: '1px solid #e7eaee' }}>NIDN</th>
+                      <th style={{ background: '#f8f9fa', color: '#5b6b79', fontWeight: 600, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.04em', padding: '12px 16px', borderBottom: '1px solid #e7eaee' }}>Bimbingan</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {dosenDist.length === 0 ? (
+                      <tr><td colSpan={3} className="text-center py-4 text-muted">Belum ada data</td></tr>
+                    ) : dosenDist.map((d, i) => (
+                      <tr key={i}>
+                        <td className="fw-medium" style={{ padding: '12px 16px', color: '#1d2630' }}>{d.nama}</td>
+                        <td style={{ padding: '12px 16px', color: '#5b6b79', fontSize: '0.8rem' }}>{d.nidn}</td>
+                        <td style={{ padding: '12px 16px' }}>
+                          <span
+                            className={`badge rounded-pill fw-semibold ${d.total > 0 ? 'badge-light-primary' : 'badge-light-warning'}`}
+                            style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                          >
+                            {d.total} mahasiswa
+                          </span>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {dosenDist.map((d, i) => (
-                        <tr key={i} className="border-b border-slate-50 hover:bg-slate-50">
-                          <td className="px-4 py-3 font-medium text-slate-800">{d.nama}</td>
-                          <td className="px-4 py-3 text-slate-500 text-xs">{d.nidn}</td>
-                          <td className="px-4 py-3">
-                            <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${d.total > 0 ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-500'}`}>
-                              {d.total} mahasiswa
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </main>
     </div>
   )

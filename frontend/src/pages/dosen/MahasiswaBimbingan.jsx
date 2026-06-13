@@ -27,67 +27,75 @@ export default function MahasiswaBimbingan() {
   }, [search, data])
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-1">Mahasiswa Bimbingan</h1>
-        <p className="text-slate-500 text-sm mb-6">Total {data.length} mahasiswa dalam bimbingan Anda. Klik baris untuk melihat detail KRS.</p>
+      <main className="pc-content">
+        <div className="page-header">
+          <div>
+            <h1>Mahasiswa Bimbingan</h1>
+            <p className="sub mb-0">Total {data.length} mahasiswa — klik baris untuk detail KRS</p>
+          </div>
+        </div>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari nama atau NIM..."
-            className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          />
+        {/* Search */}
+        <div className="card mb-3" style={{ borderRadius: 10, border: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+          <div className="card-body py-2 px-3">
+            <div className="search-wrapper">
+              <Search size={15} className="search-icon" />
+              <input
+                type="text"
+                className="form-control border-0 shadow-none"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari nama atau NIM..."
+                style={{ borderRadius: 8 }}
+              />
+            </div>
+          </div>
         </div>
 
         {isLoading ? <LoadingSpinner /> : (
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+          <div className="card table-card">
+            <div className="table-responsive">
+              <table className="table table-hover mb-0">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200">
+                  <tr>
                     {['NIM', 'Nama', 'Jurusan', 'Semester', 'Jumlah MK', 'Total SKS', ''].map((h) => (
-                      <th key={h} className="px-4 py-3 text-left font-semibold text-slate-600 whitespace-nowrap">{h}</th>
+                      <th key={h}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={7} className="px-4 py-12 text-center text-slate-400">
+                      <td colSpan={7} className="text-center py-5 text-muted">
                         {search ? 'Tidak ada mahasiswa yang cocok' : 'Belum ada mahasiswa bimbingan'}
                       </td>
                     </tr>
-                  ) : (
-                    filtered.map((m) => (
-                      <tr
-                        key={m.id}
-                        onClick={() => navigate(`/dosen/bimbingan/${m.id}`)}
-                        className="border-b border-slate-100 hover:bg-blue-50 cursor-pointer transition-colors"
-                      >
-                        <td className="px-4 py-3 font-mono text-xs text-slate-500">{m.nim}</td>
-                        <td className="px-4 py-3 font-medium text-slate-800">{m.nama}</td>
-                        <td className="px-4 py-3 text-slate-600 text-xs">{m.jurusan}</td>
-                        <td className="px-4 py-3 text-slate-600">Sem {m.semester}</td>
-                        <td className="px-4 py-3 text-slate-600">{m.ringkasan_krs?.jumlah_mk ?? 0} MK</td>
-                        <td className="px-4 py-3">
-                          <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
-                            (m.ringkasan_krs?.total_sks ?? 0) > 0
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-slate-100 text-slate-500'
-                          }`}>
-                            {m.ringkasan_krs?.total_sks ?? 0} SKS
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-slate-300">
-                          <ChevronRight className="w-4 h-4" />
-                        </td>
-                      </tr>
-                    ))
-                  )}
+                  ) : filtered.map((m) => (
+                    <tr
+                      key={m.id}
+                      onClick={() => navigate(`/dosen/bimbingan/${m.id}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#5b6b79' }}>{m.nim}</td>
+                      <td className="fw-medium" style={{ color: '#1d2630' }}>{m.nama}</td>
+                      <td style={{ fontSize: '0.82rem', color: '#5b6b79' }}>{m.jurusan}</td>
+                      <td style={{ color: '#5b6b79' }}>Sem {m.semester}</td>
+                      <td style={{ color: '#5b6b79' }}>{m.ringkasan_krs?.jumlah_mk ?? 0} MK</td>
+                      <td>
+                        <span
+                          className={`badge rounded-pill fw-semibold ${
+                            (m.ringkasan_krs?.total_sks ?? 0) > 0 ? 'badge-light-primary' : ''
+                          }`}
+                          style={(m.ringkasan_krs?.total_sks ?? 0) === 0 ? { background: '#f3f5f7', color: '#5b6b79', fontSize: '0.75rem' } : { fontSize: '0.75rem' }}
+                        >
+                          {m.ringkasan_krs?.total_sks ?? 0} SKS
+                        </span>
+                      </td>
+                      <td style={{ color: '#bec8d0' }}><ChevronRight size={16} /></td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

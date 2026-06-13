@@ -3,52 +3,49 @@ export default function Table({ columns, data, onEdit, onDelete, isLoading, empt
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-3">
+      <div className="card table-card p-3">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-10 bg-slate-200 rounded-lg animate-pulse" />
+          <div key={i} className="skeleton-row mb-2" />
         ))}
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+    <div className="card table-card">
+      <div className="table-responsive">
+        <table className="table table-hover mb-0">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
+            <tr>
               {columns.map((col) => (
-                <th key={col.key} className="px-4 py-3 text-left font-semibold text-slate-600 whitespace-nowrap">
-                  {col.label}
-                </th>
+                <th key={col.key}>{col.label}</th>
               ))}
-              {hasActions && (
-                <th className="px-4 py-3 text-left font-semibold text-slate-600">Aksi</th>
-              )}
+              {hasActions && <th>Aksi</th>}
             </tr>
           </thead>
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + (hasActions ? 1 : 0)} className="px-4 py-12 text-center text-slate-400">
+                <td colSpan={columns.length + (hasActions ? 1 : 0)} className="text-center py-5 text-muted">
                   {emptyMessage}
                 </td>
               </tr>
             ) : (
               data.map((row, i) => (
-                <tr key={row.id ?? i} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
+                <tr key={row.id ?? i}>
                   {columns.map((col) => (
-                    <td key={col.key} className="px-4 py-3 text-slate-700">
+                    <td key={col.key}>
                       {col.render ? col.render(row) : (row[col.key] ?? '-')}
                     </td>
                   ))}
                   {hasActions && (
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-2">
+                    <td>
+                      <div className="d-flex gap-2">
                         {onEdit && (
                           <button
                             onClick={() => onEdit(row)}
-                            className="px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
+                            className="btn btn-sm badge-light-primary border-0"
+                            style={{ borderRadius: 6, fontSize: '0.78rem' }}
                           >
                             Edit
                           </button>
@@ -56,7 +53,8 @@ export default function Table({ columns, data, onEdit, onDelete, isLoading, empt
                         {onDelete && (
                           <button
                             onClick={() => onDelete(row)}
-                            className="px-3 py-1 text-xs font-medium bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
+                            className="btn btn-sm badge-light-danger border-0"
+                            style={{ borderRadius: 6, fontSize: '0.78rem' }}
                           >
                             Hapus
                           </button>
