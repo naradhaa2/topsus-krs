@@ -2,13 +2,8 @@
 
 /* Match Able Pro demo: light gray body background, white sidebar + header */
 body { background-color: #f3f5f7 !important; }
-.pc-sidebar { background: #fff !important; top: 0 !important; left: 0 !important; }
-.pc-header  { background: #fff !important; border-bottom: 1px solid #e7eaee !important; box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important; top: 0 !important; left: 280px !important; }
-.pc-container { margin-left: 280px !important; top: 74px !important; }
-
-/* Sidebar collapsed state — sync header & container */
-.pc-sidebar-hide ~ .pc-header  { left: 0 !important; }
-.pc-sidebar-hide ~ .pc-container { margin-left: 0 !important; }
+.pc-sidebar { background: #fff !important; }
+.pc-header  { background: #fff !important; border-bottom: 1px solid #e7eaee !important; box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important; top: 0 !important; }
 
 /* Fade animation for modal */
 @keyframes fadeIn {
