@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
-import Sidebar    from '../../components/Sidebar'
+import Layout from '../../components/Layout'
 import PageHeader from '../../components/PageHeader'
 import Table      from '../../components/Table'
 import Modal      from '../../components/Modal'
@@ -109,9 +109,7 @@ export default function ManajemenMahasiswa() {
   ]
 
   return (
-    <div className="pc-container">
-      <Sidebar />
-      <div className="pc-content">
+    <Layout>
         <PageHeader
           title="Manajemen Mahasiswa"
           subtitle={`Total ${total} mahasiswa terdaftar`}
@@ -215,7 +213,6 @@ export default function ManajemenMahasiswa() {
             </select>
           </div>
         </Modal>
-      </div>
-    </div>
+    </Layout>
   )
 }

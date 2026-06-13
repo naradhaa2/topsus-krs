@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import Sidebar        from '../../components/Sidebar'
+import Layout from '../../components/Layout'
 import PageHeader     from '../../components/PageHeader'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
@@ -27,9 +27,7 @@ export default function MahasiswaBimbingan() {
   }, [search, data])
 
   return (
-    <div className="pc-container">
-      <Sidebar />
-      <div className="pc-content">
+    <Layout>
         <PageHeader title="Mahasiswa Bimbingan" subtitle={`Total ${data.length} mahasiswa — klik baris untuk detail KRS`} />
 
         {/* Search */}
@@ -95,7 +93,6 @@ export default function MahasiswaBimbingan() {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </Layout>
   )
 }

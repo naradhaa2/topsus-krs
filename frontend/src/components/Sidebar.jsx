@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
@@ -33,15 +33,10 @@ export default function Sidebar() {
   const menu = user?.role === 'admin' ? ADMIN_MENU : DOSEN_MENU
   const initial = user?.nama?.charAt(0)?.toUpperCase() ?? 'U'
 
-  useEffect(() => {
-    document.body.classList.toggle('mob-sidebar-active', mobOpen)
-    return () => document.body.classList.remove('mob-sidebar-active')
-  }, [mobOpen])
-
   return (
     <>
       {/* ── Left sidebar ── */}
-      <nav className="pc-sidebar">
+      <nav className={`pc-sidebar${mobOpen ? ' mob-sidebar-active' : ''}`}>
         <div className="navbar-wrapper">
           <div className="m-header">
             <a href="#" className="b-brand text-primary">

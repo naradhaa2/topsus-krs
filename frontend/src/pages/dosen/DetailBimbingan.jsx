@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import Sidebar        from '../../components/Sidebar'
+import Layout from '../../components/Layout'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
@@ -31,9 +31,7 @@ export default function DetailBimbingan() {
   }, [id])
 
   return (
-    <div className="pc-container">
-      <Sidebar />
-      <div className="pc-content">
+    <Layout>
         <button
           onClick={() => navigate('/dosen/bimbingan')}
           className="btn btn-sm btn-light d-flex align-items-center gap-2 mb-4"
@@ -119,7 +117,6 @@ export default function DetailBimbingan() {
             </div>
           </>
         ) : null}
-      </div>
-    </div>
+    </Layout>
   )
 }

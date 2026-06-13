@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import Sidebar        from '../../components/Sidebar'
+import Layout from '../../components/Layout'
 import PageHeader     from '../../components/PageHeader'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
@@ -29,9 +29,7 @@ export default function ProfileDosen() {
   }, [])
 
   return (
-    <div className="pc-container">
-      <Sidebar />
-      <div className="pc-content">
+    <Layout>
         <PageHeader title="Profil Dosen" />
 
         {isLoading ? <LoadingSpinner /> : profile ? (
@@ -64,7 +62,6 @@ export default function ProfileDosen() {
             </div>
           </div>
         ) : null}
-      </div>
-    </div>
+    </Layout>
   )
 }

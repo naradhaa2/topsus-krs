@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
-import Sidebar    from '../../components/Sidebar'
+import Layout from '../../components/Layout'
 import PageHeader from '../../components/PageHeader'
 import Table      from '../../components/Table'
 import Modal      from '../../components/Modal'
@@ -94,9 +94,7 @@ export default function ManajemenDosen() {
   ]
 
   return (
-    <div className="pc-container">
-      <Sidebar />
-      <div className="pc-content">
+    <Layout>
         <PageHeader
           title="Manajemen Dosen"
           subtitle={`Total ${total} dosen terdaftar`}
@@ -175,7 +173,6 @@ export default function ManajemenDosen() {
             <input className="form-control" value={form.no_telp} onChange={setF('no_telp')} placeholder="08xxxxxxxxxx" style={{ borderRadius: 8 }} />
           </div>
         </Modal>
-      </div>
-    </div>
+    </Layout>
   )
 }
