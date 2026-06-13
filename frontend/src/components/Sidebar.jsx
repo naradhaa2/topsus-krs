@@ -30,13 +30,14 @@ function NavItem({ path, label, icon, onClick }) {
 export default function Sidebar() {
   const { user, logout } = useAuth()
   const [mobOpen, setMobOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
   const menu = user?.role === 'admin' ? ADMIN_MENU : DOSEN_MENU
   const initial = user?.nama?.charAt(0)?.toUpperCase() ?? 'U'
 
   return (
     <>
       {/* ── Left sidebar ── */}
-      <nav className={`pc-sidebar${mobOpen ? ' mob-sidebar-active' : ''}`}>
+      <nav className={`pc-sidebar${mobOpen ? ' mob-sidebar-active' : ''}${collapsed ? ' pc-sidebar-hide' : ''}`}>
         <div className="navbar-wrapper">
           <div className="m-header">
             <a href="#" className="b-brand text-primary">
@@ -103,7 +104,7 @@ export default function Sidebar() {
           <div className="me-auto pc-mob-drp">
             <ul className="list-unstyled">
               <li className="pc-h-item pc-sidebar-collapse">
-                <a href="#" className="pc-head-link ms-0">
+                <a href="#" className="pc-head-link ms-0" onClick={(e) => { e.preventDefault(); setCollapsed((c) => !c) }}>
                   <i className="ti ti-menu-2" />
                 </a>
               </li>
