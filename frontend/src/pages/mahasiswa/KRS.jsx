@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import Navbar         from '../../components/Navbar'
+import Layout         from '../../components/Layout'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
@@ -63,15 +63,11 @@ export default function KRS() {
   const barColor = totalSKS >= MAX_SKS ? 'bg-danger' : totalSKS >= 20 ? 'bg-warning' : 'bg-primary'
 
   if (isLoading) return (
-    <div className="mhs-container">
-      <Navbar />
-      <div className="container-xl py-4"><LoadingSpinner /></div>
-    </div>
+    <Layout><div className="container-xl py-4"><LoadingSpinner /></div></Layout>
   )
 
   return (
-    <div className="mhs-container">
-      <Navbar />
+    <Layout>
       <div className="container-xl py-4">
         <div className="mb-4">
           <h5 className="fw-bold mb-1">Kartu Rencana Studi</h5>
@@ -184,6 +180,6 @@ export default function KRS() {
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   )
 }

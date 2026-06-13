@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import Navbar         from '../../components/Navbar'
+import Layout         from '../../components/Layout'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
@@ -30,8 +30,7 @@ export default function ProfileMahasiswa() {
   }, [])
 
   return (
-    <div className="mhs-container">
-      <Navbar />
+    <Layout>
       <div className="container-lg py-4">
         <h5 className="fw-bold mb-4">Profil Saya</h5>
 
@@ -87,6 +86,6 @@ export default function ProfileMahasiswa() {
           </div>
         ) : null}
       </div>
-    </div>
+    </Layout>
   )
 }

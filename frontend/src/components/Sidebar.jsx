@@ -14,6 +14,11 @@ const DOSEN_MENU = [
   { path: '/dosen/bimbingan', label: 'Mahasiswa Bimbingan', icon: 'ti ti-users' },
 ]
 
+const MAHASISWA_MENU = [
+  { path: '/mahasiswa/profile', label: 'Profil Saya', icon: 'ti ti-user' },
+  { path: '/mahasiswa/krs',     label: 'KRS',         icon: 'ti ti-bookmarks' },
+]
+
 function NavItem({ path, label, icon, onClick }) {
   const location = useLocation()
   const active = location.pathname === path
@@ -31,7 +36,7 @@ export default function Sidebar() {
   const { user, logout } = useAuth()
   const [mobOpen, setMobOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
-  const menu = user?.role === 'admin' ? ADMIN_MENU : DOSEN_MENU
+  const menu = user?.role === 'admin' ? ADMIN_MENU : user?.role === 'mahasiswa' ? MAHASISWA_MENU : DOSEN_MENU
   const initial = user?.nama?.charAt(0)?.toUpperCase() ?? 'U'
 
   return (
