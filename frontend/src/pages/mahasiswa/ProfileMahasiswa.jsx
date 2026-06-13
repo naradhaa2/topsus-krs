@@ -1,22 +1,18 @@
 import { useEffect, useState } from 'react'
-import { User, BookOpen, GraduationCap, Phone, Mail, Hash } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar         from '../../components/Navbar'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
-function InfoRow({ icon: Icon, label, value }) {
+function InfoRow({ icon, label, value }) {
   return (
-    <div className="d-flex align-items-center gap-3 p-3 rounded-3" style={{ background: '#f8f9fa' }}>
-      <div
-        className="d-flex align-items-center justify-content-center flex-shrink-0"
-        style={{ width: 34, height: 34, background: '#fff', border: '1px solid #e7eaee', borderRadius: 8 }}
-      >
-        <Icon size={15} color="#8996a4" />
+    <div className="d-flex align-items-center gap-3 p-3 rounded-3 bg-body-tertiary">
+      <div className="avtar avtar-s bg-light-primary flex-shrink-0">
+        <i className={icon} />
       </div>
       <div className="overflow-hidden">
-        <div style={{ fontSize: '0.72rem', color: '#5b6b79', fontWeight: 500 }}>{label}</div>
-        <div className="fw-semibold text-truncate" style={{ fontSize: '0.875rem', color: '#1d2630' }}>{value}</div>
+        <div className="text-muted" style={{ fontSize: '0.72rem', fontWeight: 500 }}>{label}</div>
+        <div className="fw-semibold text-truncate">{value}</div>
       </div>
     </div>
   )
@@ -34,33 +30,30 @@ export default function ProfileMahasiswa() {
   }, [])
 
   return (
-    <div className="mhs-container" style={{ background: '#f3f5f7' }}>
+    <div className="mhs-container">
       <Navbar />
       <div className="container-lg py-4">
-        <h1 className="fw-bold mb-4" style={{ fontSize: '1.3rem', color: '#1d2630' }}>Profil Saya</h1>
+        <h5 className="fw-bold mb-4">Profil Saya</h5>
 
         {isLoading ? <LoadingSpinner /> : profile ? (
           <div className="row g-4">
             {/* Info mahasiswa */}
             <div className="col-md-6">
-              <div className="card" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+              <div className="card">
                 <div className="card-body p-4">
                   <div className="d-flex align-items-center gap-3 mb-4">
-                    <div
-                      className="d-flex align-items-center justify-content-center flex-shrink-0"
-                      style={{ width: 60, height: 60, background: 'rgba(70,128,255,0.1)', borderRadius: '50%' }}
-                    >
-                      <User size={28} color="#4680ff" />
+                    <div className="avtar avtar-xl bg-light-primary">
+                      <i className="ti ti-user f-28" />
                     </div>
                     <div>
-                      <div className="fw-bold" style={{ fontSize: '1.1rem', color: '#1d2630' }}>{profile.nama}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#5b6b79' }}>{profile.nim}</div>
+                      <div className="fw-bold f-16">{profile.nama}</div>
+                      <div className="text-muted">{profile.nim}</div>
                     </div>
                   </div>
                   <div className="d-flex flex-column gap-2">
-                    <InfoRow icon={GraduationCap} label="Jurusan"  value={profile.jurusan} />
-                    <InfoRow icon={BookOpen}      label="Semester" value={`Semester ${profile.semester}`} />
-                    <InfoRow icon={Mail}          label="Email"    value={profile.email} />
+                    <InfoRow icon="ti ti-school"    label="Jurusan"  value={profile.jurusan} />
+                    <InfoRow icon="ti ti-book"      label="Semester" value={`Semester ${profile.semester}`} />
+                    <InfoRow icon="ti ti-mail"      label="Email"    value={profile.email} />
                   </div>
                 </div>
               </div>
@@ -68,24 +61,24 @@ export default function ProfileMahasiswa() {
 
             {/* Info dosen PA */}
             <div className="col-md-6">
-              <div className="card h-100" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+              <div className="card h-100">
                 <div className="card-body p-4">
                   <div className="d-flex align-items-center gap-2 mb-4">
-                    <User size={15} color="#4680ff" />
-                    <span className="fw-semibold" style={{ fontSize: '0.95rem', color: '#1d2630' }}>Dosen Pembimbing Akademik</span>
+                    <i className="ti ti-user-circle text-primary" />
+                    <span className="fw-semibold">Dosen Pembimbing Akademik</span>
                   </div>
                   {profile.dosen_pa ? (
                     <div className="d-flex flex-column gap-2">
-                      <InfoRow icon={User}  label="Nama"     value={profile.dosen_pa.nama} />
-                      <InfoRow icon={Hash}  label="NIDN"     value={profile.dosen_pa.nidn} />
-                      <InfoRow icon={Mail}  label="Email"    value={profile.dosen_pa.email} />
-                      <InfoRow icon={Phone} label="No. Telp" value={profile.dosen_pa.no_telp || '–'} />
+                      <InfoRow icon="ti ti-user"  label="Nama"     value={profile.dosen_pa.nama} />
+                      <InfoRow icon="ti ti-hash"  label="NIDN"     value={profile.dosen_pa.nidn} />
+                      <InfoRow icon="ti ti-mail"  label="Email"    value={profile.dosen_pa.email} />
+                      <InfoRow icon="ti ti-phone" label="No. Telp" value={profile.dosen_pa.no_telp || '–'} />
                     </div>
                   ) : (
                     <div className="d-flex flex-column align-items-center justify-content-center py-4 text-muted text-center">
-                      <User size={40} className="mb-2 opacity-25" />
-                      <p className="mb-1" style={{ fontSize: '0.875rem' }}>Belum ada dosen PA yang assigned</p>
-                      <p style={{ fontSize: '0.78rem' }}>Hubungi admin untuk proses penentuan PA</p>
+                      <i className="ti ti-user f-36 mb-2 opacity-25" />
+                      <p className="mb-1">Belum ada dosen PA yang assigned</p>
+                      <p className="mb-0" style={{ fontSize: '0.78rem' }}>Hubungi admin untuk proses penentuan PA</p>
                     </div>
                   )}
                 </div>

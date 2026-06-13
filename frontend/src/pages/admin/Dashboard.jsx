@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { GraduationCap, Users, BookOpen, BarChart2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
@@ -67,16 +66,16 @@ export default function Dashboard() {
         {/* Stat cards */}
         <div className="row g-3 mb-4">
           <div className="col-6 col-xl-3">
-            <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}           icon={GraduationCap} color="blue" />
+            <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}            tablerIcon="ti ti-user-graduate" color="blue" />
           </div>
           <div className="col-6 col-xl-3">
-            <StatCard title="Total Dosen"     value={stats?.total_dosen ?? 0}               icon={Users}         color="emerald" />
+            <StatCard title="Total Dosen"     value={stats?.total_dosen ?? 0}                tablerIcon="ti ti-users"         color="emerald" />
           </div>
           <div className="col-6 col-xl-3">
-            <StatCard title="Rata-rata SKS"   value={stats?.rata_rata_sks ?? 0}             icon={BookOpen}      color="amber" subtitle="per mahasiswa" />
+            <StatCard title="Rata-rata SKS"   value={stats?.rata_rata_sks ?? 0}              tablerIcon="ti ti-book"          color="amber" subtitle="per mahasiswa" />
           </div>
           <div className="col-6 col-xl-3">
-            <StatCard title="Jumlah Jurusan"  value={stats?.distribusi_jurusan?.length ?? 0} icon={BarChart2}     color="rose" />
+            <StatCard title="Jumlah Jurusan"  value={stats?.distribusi_jurusan?.length ?? 0} tablerIcon="ti ti-chart-bar"     color="rose" />
           </div>
         </div>
 

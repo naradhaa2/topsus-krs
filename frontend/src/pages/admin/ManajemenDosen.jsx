@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react'
-import { Plus, Search } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Sidebar from '../../components/Sidebar'
 import Table   from '../../components/Table'
@@ -102,22 +101,21 @@ export default function ManajemenDosen() {
             <h1>Manajemen Dosen</h1>
             <p className="sub mb-0">Total {total} dosen terdaftar</p>
           </div>
-          <button onClick={openCreate} className="btn btn-primary d-flex align-items-center gap-2" style={{ borderRadius: 10 }}>
-            <Plus size={16} /> Tambah Dosen
+          <button onClick={openCreate} className="btn btn-primary">
+            <i className="ti ti-plus me-1" />Tambah Dosen
           </button>
         </div>
 
-        <div className="card mb-3" style={{ borderRadius: 10, border: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+        <div className="card mb-3">
           <div className="card-body py-2 px-3">
-            <div className="search-wrapper">
-              <Search size={15} className="search-icon" />
+            <div className="search-input-wrap">
+              <span className="s-icon"><i className="ti ti-search" /></span>
               <input
                 type="text"
                 className="form-control border-0 shadow-none"
                 value={search}
                 onChange={(e) => handleSearch(e.target.value)}
                 placeholder="Cari nama atau NIDN..."
-                style={{ borderRadius: 8 }}
               />
             </div>
           </div>
