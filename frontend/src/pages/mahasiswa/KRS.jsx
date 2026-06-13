@@ -21,7 +21,7 @@ export default function KRS() {
       api.get('/api/mahasiswa/profile'),
     ])
       .then(([mkRes, krsRes, profileRes]) => {
-        setAvailableMK(mkRes.data.data)
+        setAvailableMK(mkRes.data.data ?? [])
         setSelectedKrs(krsRes.data.data.mata_kuliah ?? [])
         setProfile(profileRes.data.data)
       })

@@ -15,7 +15,7 @@ export default function MahasiswaBimbingan() {
 
   useEffect(() => {
     api.get('/api/dosen/mahasiswa-bimbingan')
-      .then((r) => { setData(r.data.data); setFiltered(r.data.data) })
+      .then((r) => { const d = r.data.data ?? []; setData(d); setFiltered(d) })
       .catch(() => toast.error('Gagal memuat data mahasiswa bimbingan'))
       .finally(() => setIsLoading(false))
   }, [])

@@ -48,7 +48,7 @@ export default function ManajemenMahasiswa() {
       if (search) params.search = search
       const r = await api.get('/api/admin/mahasiswa', { params })
       const { mahasiswa, total, pages } = r.data.data
-      setData(mahasiswa)
+      setData(mahasiswa ?? [])
       setTotal(total)
       setTotalPages(pages)
     } catch { toast.error('Gagal memuat data mahasiswa') }
