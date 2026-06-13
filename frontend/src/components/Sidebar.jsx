@@ -27,108 +27,152 @@ function NavItem({ path, label, icon, onClick }) {
   )
 }
 
-function SidebarBody({ menu, onLinkClick }) {
-  const { user, logout } = useAuth()
-  const initial = user?.nama?.charAt(0)?.toUpperCase() ?? 'U'
-
-  return (
-    <div className="navbar-wrapper">
-      {/* Brand header */}
-      <div className="m-header">
-        <a href="#" className="b-brand text-primary">
-          <div className="avtar avtar-s bg-primary me-2">
-            <i className="ti ti-book f-16 text-white" />
-          </div>
-          <span className="fw-bold" style={{ color: 'inherit', fontSize: '1rem' }}>Sistem KRS</span>
-        </a>
-      </div>
-
-      <div className="navbar-content">
-        {/* User card */}
-        <div className="card pc-user-card">
-          <div className="card-body">
-            <div className="d-flex align-items-center">
-              <div className="flex-shrink-0">
-                <div className="avtar avtar-s bg-light-primary">
-                  <span className="f-16 fw-bold text-primary">{initial}</span>
-                </div>
-              </div>
-              <div className="flex-grow-1 ms-3 me-2">
-                <h6 className="mb-0 text-truncate" style={{ maxWidth: 130 }}>{user?.nama}</h6>
-                <small className="text-capitalize text-muted">{user?.role}</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Nav items */}
-        <ul className="pc-navbar">
-          <li className="pc-item pc-caption">
-            <label>Menu Utama</label>
-          </li>
-          {menu.map((item) => (
-            <NavItem key={item.path} {...item} onClick={onLinkClick} />
-          ))}
-        </ul>
-
-        {/* Logout card at bottom */}
-        <div className="card pc-user-card mt-3">
-          <div className="card-body">
-            <button
-              onClick={logout}
-              className="btn btn-light-danger w-100 d-flex align-items-center justify-content-center gap-2"
-            >
-              <i className="ti ti-logout" />
-              Keluar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 export default function Sidebar() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const [mobOpen, setMobOpen] = useState(false)
   const menu = user?.role === 'admin' ? ADMIN_MENU : DOSEN_MENU
+  const initial = user?.nama?.charAt(0)?.toUpperCase() ?? 'U'
 
-  // add/remove body class for Able Pro JS hook
   useEffect(() => {
-    if (mobOpen) {
-      document.body.classList.add('mob-sidebar-active')
-    } else {
-      document.body.classList.remove('mob-sidebar-active')
-    }
+    document.body.classList.toggle('mob-sidebar-active', mobOpen)
     return () => document.body.classList.remove('mob-sidebar-active')
   }, [mobOpen])
 
   return (
     <>
-      {/* Sidebar */}
-      <nav className={`pc-sidebar${mobOpen ? ' mob-sidebar-active' : ''}`}>
-        <SidebarBody menu={menu} onLinkClick={() => setMobOpen(false)} />
+      {/* ── Left sidebar ── */}
+      <nav className="pc-sidebar">
+        <div className="navbar-wrapper">
+          <div className="m-header">
+            <a href="#" className="b-brand text-primary">
+              <div className="avtar avtar-s bg-primary me-2">
+                <i className="ti ti-book f-16 text-white" />
+              </div>
+              <span className="f-w-700">Sistem KRS</span>
+            </a>
+          </div>
+
+          <div className="navbar-content">
+            <div className="card pc-user-card">
+              <div className="card-body">
+                <div className="d-flex align-items-center">
+                  <div className="flex-shrink-0">
+                    <div className="avtar avtar-s bg-light-primary">
+                      <span className="f-16 f-w-700 text-primary">{initial}</span>
+                    </div>
+                  </div>
+                  <div className="flex-grow-1 ms-3 me-2 overflow-hidden">
+                    <h6 className="mb-0 text-truncate">{user?.nama}</h6>
+                    <small className="text-capitalize text-muted">{user?.role}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <ul className="pc-navbar">
+              <li className="pc-item pc-caption">
+                <label>Menu Utama</label>
+              </li>
+              {menu.map((item) => (
+                <NavItem key={item.path} {...item} onClick={() => setMobOpen(false)} />
+              ))}
+            </ul>
+
+            <div className="card pc-user-card mt-3">
+              <div className="card-body">
+                <button
+                  onClick={logout}
+                  className="btn btn-light-danger w-100 d-flex align-items-center justify-content-center gap-2"
+                >
+                  <i className="ti ti-logout" />Keluar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </nav>
 
-      {/* Mobile backdrop */}
+      {/* ── Mobile backdrop ── */}
       {mobOpen && (
         <div
           className="pc-menu-overlay"
           onClick={() => setMobOpen(false)}
-          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 1024 }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1024 }}
         />
       )}
 
-      {/* Mobile hamburger (visible only on small screens) */}
-      <header className="pc-header d-flex d-md-none align-items-center" style={{ paddingLeft: 16 }}>
-        <button
-          className="pc-head-link ms-0 border-0 bg-transparent"
-          onClick={() => setMobOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          <i className="ti ti-menu-2 f-20" />
-        </button>
-        <span className="fw-bold ms-3" style={{ fontSize: '0.95rem', color: '#1d2630' }}>Sistem KRS</span>
+      {/* ── Top header bar ── */}
+      <header className="pc-header">
+        <div className="header-wrapper">
+          {/* Mobile toggle + desktop collapse */}
+          <div className="me-auto pc-mob-drp">
+            <ul className="list-unstyled">
+              <li className="pc-h-item pc-sidebar-collapse">
+                <a href="#" className="pc-head-link ms-0">
+                  <i className="ti ti-menu-2" />
+                </a>
+              </li>
+              <li className="pc-h-item pc-sidebar-popup">
+                <a
+                  href="#"
+                  className="pc-head-link ms-0"
+                  onClick={(e) => { e.preventDefault(); setMobOpen((o) => !o) }}
+                >
+                  <i className="ti ti-menu-2" />
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Right — user avatar + dropdown */}
+          <div className="ms-auto">
+            <ul className="list-unstyled">
+              <li className="dropdown pc-h-item header-user-profile">
+                <a
+                  className="pc-head-link dropdown-toggle arrow-none me-0 d-flex align-items-center gap-2"
+                  data-bs-toggle="dropdown"
+                  href="#"
+                  role="button"
+                  data-bs-auto-close="outside"
+                  aria-expanded="false"
+                >
+                  <div className="avtar avtar-s bg-light-primary">
+                    <span className="f-14 f-w-700 text-primary">{initial}</span>
+                  </div>
+                  <span className="d-none d-sm-block">
+                    <span className="f-w-600" style={{ fontSize: '0.875rem' }}>{user?.nama}</span>
+                    <span className="d-block text-muted text-capitalize" style={{ fontSize: '0.72rem' }}>{user?.role}</span>
+                  </span>
+                </a>
+
+                <div className="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown">
+                  <div className="dropdown-header">
+                    <h5 className="m-0">Profil</h5>
+                  </div>
+                  <div className="dropdown-body">
+                    <div className="d-flex align-items-center mb-3">
+                      <div className="flex-shrink-0">
+                        <div className="avtar avtar-s bg-light-primary">
+                          <span className="f-16 f-w-700 text-primary">{initial}</span>
+                        </div>
+                      </div>
+                      <div className="flex-grow-1 ms-3">
+                        <h6 className="mb-0">{user?.nama}</h6>
+                        <small className="text-muted text-capitalize">{user?.role}</small>
+                      </div>
+                    </div>
+                    <hr className="border-secondary border-opacity-50" />
+                    <div className="d-grid">
+                      <button className="btn btn-primary" onClick={logout}>
+                        <i className="ti ti-logout me-2" />Keluar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </header>
     </>
   )

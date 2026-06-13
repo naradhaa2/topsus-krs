@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
+import PageHeader     from '../../components/PageHeader'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
@@ -28,13 +29,8 @@ export default function MahasiswaBimbingan() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
-        <div className="page-header">
-          <div>
-            <h1>Mahasiswa Bimbingan</h1>
-            <p className="sub mb-0">Total {data.length} mahasiswa — klik baris untuk detail KRS</p>
-          </div>
-        </div>
+      <div className="pc-content">
+        <PageHeader title="Mahasiswa Bimbingan" subtitle={`Total ${data.length} mahasiswa — klik baris untuk detail KRS`} />
 
         {/* Search */}
         <div className="card mb-3">
@@ -99,7 +95,7 @@ export default function MahasiswaBimbingan() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

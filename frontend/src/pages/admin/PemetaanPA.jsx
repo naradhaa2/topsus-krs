@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
+import PageHeader     from '../../components/PageHeader'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api            from '../../services/api'
 
@@ -57,13 +58,8 @@ export default function PemetaanPA() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
-        <div className="page-header">
-          <div>
-            <h1>Pemetaan Dosen PA</h1>
-            <p className="sub mb-0">Assign atau ubah dosen pembimbing akademik untuk mahasiswa</p>
-          </div>
-        </div>
+      <div className="pc-content">
+        <PageHeader title="Pemetaan Dosen PA" subtitle="Assign atau ubah dosen pembimbing akademik untuk mahasiswa" />
 
         {isLoading ? <LoadingSpinner /> : (
           <div className="row g-4">
@@ -180,7 +176,7 @@ export default function PemetaanPA() {
             </div>
           </div>
         )}
-      </main>
+      </div>
     </div>
   )
 }

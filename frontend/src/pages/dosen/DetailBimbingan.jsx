@@ -33,7 +33,7 @@ export default function DetailBimbingan() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
+      <div className="pc-content">
         <button
           onClick={() => navigate('/dosen/bimbingan')}
           className="btn btn-sm btn-light d-flex align-items-center gap-2 mb-4"
@@ -119,7 +119,7 @@ export default function DetailBimbingan() {
             </div>
           </>
         ) : null}
-      </main>
+      </div>
     </div>
   )
 }
