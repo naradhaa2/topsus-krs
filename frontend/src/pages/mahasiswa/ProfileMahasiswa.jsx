@@ -64,7 +64,7 @@ export default function ProfileMahasiswa() {
               <div className="card h-100">
                 <div className="card-body p-4">
                   <div className="d-flex align-items-center gap-2 mb-4">
-                    <i className="ti ti-user-circle text-primary" />
+                    <i className="ti ti-user text-primary" />
                     <span className="fw-semibold">Dosen Pembimbing Akademik</span>
                   </div>
                   {profile.dosen_pa ? (

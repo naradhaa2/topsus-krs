@@ -83,7 +83,7 @@ export default function Login() {
                     className={`btn mt-0 ${role === r ? 'btn-primary' : 'bg-light text-muted border-0'}`}
                     style={{ borderRadius: 8 }}
                   >
-                    <i className={`ti ${r === 'mahasiswa' ? 'ti-user-graduate' : r === 'dosen' ? 'ti-users' : 'ti-shield-check'} me-2`} />
+                    <i className={`ti ${r === 'mahasiswa' ? 'ti-school' : r === 'dosen' ? 'ti-users' : 'ti-shield-check'} me-2`} />
                     Masuk sebagai {ROLE_LABEL[r]}
                   </button>
                 ))}

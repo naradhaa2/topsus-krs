@@ -2,8 +2,8 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const MENU = [
-  { path: '/mahasiswa/profile', label: 'Profil',  icon: 'ti ti-user-circle' },
-  { path: '/mahasiswa/krs',     label: 'KRS',     icon: 'ti ti-books' },
+  { path: '/mahasiswa/profile', label: 'Profil',  icon: 'ti ti-user' },
+  { path: '/mahasiswa/krs',     label: 'KRS',     icon: 'ti ti-bookmarks' },
 ]
 
 export default function Navbar() {
@@ -14,10 +14,10 @@ export default function Navbar() {
     <nav className="mhs-topbar">
       {/* Brand */}
       <a href="#" className="brand">
-        <div className="avtar avtar-s">
-          <i className="ti ti-book f-16" />
+        <div className="avtar avtar-s bg-primary me-2">
+          <i className="ti ti-book f-16 text-white" />
         </div>
-        Sistem KRS
+        <span className="f-w-700">Sistem KRS</span>
       </a>
 
       {/* Nav links */}

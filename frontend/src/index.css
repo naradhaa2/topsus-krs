@@ -1,8 +1,9 @@
 /* App-specific overrides on top of Able Pro + Bootstrap */
 
-/* Match Able Pro demo: light gray body background, white sidebar */
+/* Match Able Pro demo: light gray body background, white sidebar + header */
 body { background-color: #f3f5f7 !important; }
 .pc-sidebar { background: #fff !important; }
+.pc-header  { background: #fff !important; border-bottom: 1px solid #e7eaee !important; box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important; }
 
 /* Fade animation for modal */
 @keyframes fadeIn {

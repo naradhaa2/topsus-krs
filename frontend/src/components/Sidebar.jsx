@@ -3,14 +3,14 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const ADMIN_MENU = [
-  { path: '/admin/dashboard',   label: 'Dashboard',        icon: 'ti ti-layout-dashboard' },
-  { path: '/admin/mahasiswa',   label: 'Mahasiswa',        icon: 'ti ti-user-student' },
+  { path: '/admin/dashboard',   label: 'Dashboard',        icon: 'ti ti-layout-grid' },
+  { path: '/admin/mahasiswa',   label: 'Mahasiswa',        icon: 'ti ti-school' },
   { path: '/admin/dosen',       label: 'Dosen',            icon: 'ti ti-users' },
   { path: '/admin/pemetaan-pa', label: 'Pemetaan PA',      icon: 'ti ti-affiliate' },
 ]
 
 const DOSEN_MENU = [
-  { path: '/dosen/profile',   label: 'Profil Saya',         icon: 'ti ti-user-circle' },
+  { path: '/dosen/profile',   label: 'Profil Saya',         icon: 'ti ti-user' },
   { path: '/dosen/bimbingan', label: 'Mahasiswa Bimbingan', icon: 'ti ti-users' },
 ]
 

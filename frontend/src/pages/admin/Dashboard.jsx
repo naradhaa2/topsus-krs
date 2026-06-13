@@ -61,7 +61,7 @@ export default function Dashboard() {
         {/* Stat cards */}
         <div className="row g-3 mb-4">
           <div className="col-6 col-xl-3">
-            <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}            tablerIcon="ti ti-user-graduate" color="blue" />
+            <StatCard title="Total Mahasiswa" value={stats?.total_mahasiswa ?? 0}            tablerIcon="ti ti-school"        color="blue" />
           </div>
           <div className="col-6 col-xl-3">
             <StatCard title="Total Dosen"     value={stats?.total_dosen ?? 0}                tablerIcon="ti ti-users"         color="emerald" />
