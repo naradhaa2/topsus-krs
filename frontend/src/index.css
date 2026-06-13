@@ -77,9 +77,6 @@
 /* Sidebar user card compact */
 .pc-user-card .user-avtar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 
-/* Override pc-sidebar active link color to match preset-1 */
-.pc-navbar .pc-item.active > .pc-link { background: var(--bs-primary); color: #fff; border-radius: 8px; }
-
 /* Mahasiswa topbar (horizontal) */
 .mhs-topbar {
   background: var(--pc-sidebar-background, #1d2630);

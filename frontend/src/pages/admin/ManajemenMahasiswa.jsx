@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
 import Sidebar    from '../../components/Sidebar'
+import PageHeader from '../../components/PageHeader'
 import Table      from '../../components/Table'
 import Modal      from '../../components/Modal'
 import api        from '../../services/api'
@@ -110,16 +111,16 @@ export default function ManajemenMahasiswa() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
-        <div className="page-header">
-          <div>
-            <h1>Manajemen Mahasiswa</h1>
-            <p className="sub mb-0">Total {total} mahasiswa terdaftar</p>
-          </div>
-          <button onClick={openCreate} className="btn btn-primary">
-            <i className="ti ti-plus me-1" />Tambah Mahasiswa
-          </button>
-        </div>
+      <div className="pc-content">
+        <PageHeader
+          title="Manajemen Mahasiswa"
+          subtitle={`Total ${total} mahasiswa terdaftar`}
+          action={
+            <button onClick={openCreate} className="btn btn-primary">
+              <i className="ti ti-plus me-1" />Tambah Mahasiswa
+            </button>
+          }
+        />
 
         {/* Search */}
         <div className="card mb-3">
@@ -214,7 +215,7 @@ export default function ManajemenMahasiswa() {
             </select>
           </div>
         </Modal>
-      </main>
+      </div>
     </div>
   )
 }

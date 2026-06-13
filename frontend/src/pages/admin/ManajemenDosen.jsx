@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import toast from 'react-hot-toast'
-import Sidebar from '../../components/Sidebar'
-import Table   from '../../components/Table'
-import Modal   from '../../components/Modal'
-import api     from '../../services/api'
+import Sidebar    from '../../components/Sidebar'
+import PageHeader from '../../components/PageHeader'
+import Table      from '../../components/Table'
+import Modal      from '../../components/Modal'
+import api        from '../../services/api'
 
 const INIT_FORM = { nama: '', nidn: '', email: '', password: '', no_telp: '' }
 
@@ -95,16 +96,16 @@ export default function ManajemenDosen() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
-        <div className="page-header">
-          <div>
-            <h1>Manajemen Dosen</h1>
-            <p className="sub mb-0">Total {total} dosen terdaftar</p>
-          </div>
-          <button onClick={openCreate} className="btn btn-primary">
-            <i className="ti ti-plus me-1" />Tambah Dosen
-          </button>
-        </div>
+      <div className="pc-content">
+        <PageHeader
+          title="Manajemen Dosen"
+          subtitle={`Total ${total} dosen terdaftar`}
+          action={
+            <button onClick={openCreate} className="btn btn-primary">
+              <i className="ti ti-plus me-1" />Tambah Dosen
+            </button>
+          }
+        />
 
         <div className="card mb-3">
           <div className="card-body py-2 px-3">
@@ -174,7 +175,7 @@ export default function ManajemenDosen() {
             <input className="form-control" value={form.no_telp} onChange={setF('no_telp')} placeholder="08xxxxxxxxxx" style={{ borderRadius: 8 }} />
           </div>
         </Modal>
-      </main>
+      </div>
     </div>
   )
 }

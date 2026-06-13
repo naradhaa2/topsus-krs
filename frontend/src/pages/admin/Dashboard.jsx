@@ -3,8 +3,9 @@ import toast from 'react-hot-toast'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
-import Sidebar from '../../components/Sidebar'
-import StatCard from '../../components/StatCard'
+import Sidebar     from '../../components/Sidebar'
+import PageHeader  from '../../components/PageHeader'
+import StatCard    from '../../components/StatCard'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import api from '../../services/api'
 
@@ -41,7 +42,7 @@ export default function Dashboard() {
     return (
       <div className="pc-container">
         <Sidebar />
-        <div className="pc-content"><LoadingSpinner /></div>
+        <div className="pc-content pt-5"><LoadingSpinner /></div>
       </div>
     )
   }
@@ -54,14 +55,8 @@ export default function Dashboard() {
   return (
     <div className="pc-container">
       <Sidebar />
-      <main className="pc-content">
-        {/* Page header */}
-        <div className="page-header">
-          <div>
-            <h1>Dashboard</h1>
-            <p className="sub mb-0">Ringkasan data Sistem KRS</p>
-          </div>
-        </div>
+      <div className="pc-content">
+        <PageHeader title="Dashboard" subtitle="Ringkasan data Sistem KRS" />
 
         {/* Stat cards */}
         <div className="row g-3 mb-4">
@@ -168,7 +163,7 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   )
 }
