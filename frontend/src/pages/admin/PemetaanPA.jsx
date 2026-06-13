@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { Users, UserCheck } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -71,9 +70,9 @@ export default function PemetaanPA() {
             {/* Panel dosen */}
             <div className="col-lg-6">
               <div className="card" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-                <div className="card-header d-flex align-items-center gap-2" style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}>
-                  <Users size={15} className="text-muted" />
-                  <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>Dosen ({dosenList.length})</span>
+                <div className="card-header d-flex align-items-center gap-2">
+                  <i className="ti ti-users text-muted" />
+                  <span className="fw-semibold">Dosen ({dosenList.length})</span>
                   <small className="text-muted ms-1">— klik untuk memilih</small>
                 </div>
 
@@ -125,9 +124,9 @@ export default function PemetaanPA() {
             {/* Panel mahasiswa */}
             <div className="col-lg-6">
               <div className="card" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
-                <div className="card-header d-flex align-items-center gap-2" style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}>
-                  <UserCheck size={15} className="text-muted" />
-                  <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>Mahasiswa ({mhsList.length})</span>
+                <div className="card-header d-flex align-items-center gap-2">
+                  <i className="ti ti-user-check text-muted" />
+                  <span className="fw-semibold">Mahasiswa ({mhsList.length})</span>
                   <small className="text-muted ms-1">
                     — {selectedDosen ? `centang untuk assign ke ${selectedDosen.nama}` : 'ubah PA via dropdown'}
                   </small>

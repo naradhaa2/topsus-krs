@@ -40,3 +40,6 @@ npm-debug.log*
 
 # Claude Code internal
 .claude/
+
+# Able Pro reference template (large, not needed in repo)
+reference-ablepro/

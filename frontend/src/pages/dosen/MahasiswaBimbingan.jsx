@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Search, ChevronRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -38,17 +37,16 @@ export default function MahasiswaBimbingan() {
         </div>
 
         {/* Search */}
-        <div className="card mb-3" style={{ borderRadius: 10, border: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+        <div className="card mb-3">
           <div className="card-body py-2 px-3">
-            <div className="search-wrapper">
-              <Search size={15} className="search-icon" />
+            <div className="search-input-wrap">
+              <span className="s-icon"><i className="ti ti-search" /></span>
               <input
                 type="text"
                 className="form-control border-0 shadow-none"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Cari nama atau NIM..."
-                style={{ borderRadius: 8 }}
               />
             </div>
           </div>
@@ -93,7 +91,7 @@ export default function MahasiswaBimbingan() {
                           {m.ringkasan_krs?.total_sks ?? 0} SKS
                         </span>
                       </td>
-                      <td style={{ color: '#bec8d0' }}><ChevronRight size={16} /></td>
+                      <td className="text-muted"><i className="ti ti-chevron-right" /></td>
                     </tr>
                   ))}
                 </tbody>

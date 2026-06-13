@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { CheckCircle2, Save, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Navbar         from '../../components/Navbar'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -61,23 +60,23 @@ export default function KRS() {
   }
 
   const pct = Math.min(100, Math.round((totalSKS / MAX_SKS) * 100))
-  const barColor = totalSKS >= MAX_SKS ? '#dc2626' : totalSKS >= 20 ? '#e58a00' : '#4680ff'
+  const barColor = totalSKS >= MAX_SKS ? 'bg-danger' : totalSKS >= 20 ? 'bg-warning' : 'bg-primary'
 
   if (isLoading) return (
-    <div className="mhs-container" style={{ background: '#f3f5f7' }}>
+    <div className="mhs-container">
       <Navbar />
       <div className="container-xl py-4"><LoadingSpinner /></div>
     </div>
   )
 
   return (
-    <div className="mhs-container" style={{ background: '#f3f5f7' }}>
+    <div className="mhs-container">
       <Navbar />
       <div className="container-xl py-4">
         <div className="mb-4">
-          <h1 className="fw-bold mb-1" style={{ fontSize: '1.3rem', color: '#1d2630' }}>Kartu Rencana Studi</h1>
+          <h5 className="fw-bold mb-1">Kartu Rencana Studi</h5>
           {profile && (
-            <p className="text-muted mb-0" style={{ fontSize: '0.85rem' }}>
+            <p className="text-muted mb-0">
               {profile.nama} · {profile.nim} · {profile.jurusan} · Semester {profile.semester}
             </p>
           )}
@@ -86,45 +85,28 @@ export default function KRS() {
         <div className="row g-4">
           {/* Grid MK */}
           <div className="col-lg-8">
-            <p className="text-muted mb-3" style={{ fontSize: '0.85rem', fontWeight: 500 }}>
-              Pilih mata kuliah yang akan diambil semester ini:
-            </p>
+            <p className="text-muted mb-3 fw-medium">Pilih mata kuliah yang akan diambil semester ini:</p>
             <div className="row g-3">
               {availableMK.map((mk) => {
                 const isSelected = selectedKode.has(mk.kode)
                 const existing   = selectedKrs.find((m) => m.kode === mk.kode)
                 return (
                   <div key={mk.kode} className="col-sm-6 col-xl-4">
-                    <div
-                      onClick={() => toggleMK(mk)}
-                      className="card h-100"
-                      style={{
-                        border: isSelected ? '2px solid var(--pc-primary)' : '2px solid #e7eaee',
-                        borderRadius: 12,
-                        boxShadow: isSelected ? '0 2px 8px rgba(70,128,255,0.15)' : '0 1px 4px rgba(0,0,0,0.04)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s',
-                        userSelect: 'none',
-                        background: isSelected ? 'rgba(70,128,255,0.04)' : '#fff',
-                      }}
-                    >
+                    <div onClick={() => toggleMK(mk)} className={`mk-card card h-100${isSelected ? ' selected' : ''}`}>
                       <div className="card-body p-3">
                         <div className="d-flex align-items-start justify-content-between gap-2 mb-3">
                           <div className="overflow-hidden">
-                            <div style={{ fontSize: '0.72rem', fontFamily: 'monospace', color: '#8996a4', marginBottom: 2 }}>{mk.kode}</div>
-                            <div className="fw-semibold lh-sm" style={{ fontSize: '0.875rem', color: '#1d2630' }}>{mk.nama}</div>
+                            <div className="text-muted mb-1" style={{ fontSize: '0.72rem', fontFamily: 'monospace' }}>{mk.kode}</div>
+                            <div className="fw-semibold lh-sm">{mk.nama}</div>
                           </div>
-                          {isSelected && <CheckCircle2 size={18} color="#4680ff" className="flex-shrink-0" />}
+                          {isSelected && <i className="ti ti-circle-check text-primary flex-shrink-0 f-20" />}
                         </div>
                         <div className="d-flex align-items-center justify-content-between">
-                          <span
-                            className={`badge rounded-pill fw-semibold ${isSelected ? 'badge-light-primary' : ''}`}
-                            style={!isSelected ? { background: '#f3f5f7', color: '#5b6b79', fontSize: '0.75rem' } : { fontSize: '0.75rem' }}
-                          >
+                          <span className={`badge rounded-pill fw-semibold ${isSelected ? 'badge-light-primary' : 'bg-light text-muted'}`}>
                             {mk.sks} SKS
                           </span>
                           {existing?.nilai && (
-                            <span className="fw-bold" style={{ fontSize: '0.75rem', color: '#2ca87f' }}>
+                            <span className="fw-bold text-success" style={{ fontSize: '0.75rem' }}>
                               Nilai: {existing.nilai}
                             </span>
                           )}
@@ -139,29 +121,26 @@ export default function KRS() {
 
           {/* Ringkasan SKS */}
           <div className="col-lg-4">
-            <div className="card sticky-top" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', top: 80 }}>
+            <div className="card sticky-top" style={{ top: 72 }}>
               <div className="card-body p-4">
                 <div className="d-flex align-items-center gap-2 mb-4">
-                  <BookOpen size={15} color="#4680ff" />
-                  <span className="fw-semibold" style={{ fontSize: '0.95rem', color: '#1d2630' }}>Ringkasan KRS</span>
+                  <i className="ti ti-book text-primary" />
+                  <span className="fw-semibold">Ringkasan KRS</span>
                 </div>
 
                 {/* SKS progress */}
                 <div className="mb-4">
-                  <div className="d-flex justify-content-between mb-2" style={{ fontSize: '0.875rem' }}>
-                    <span className="fw-medium" style={{ color: '#5b6b79' }}>Total SKS</span>
-                    <span className="fw-bold" style={{ color: totalSKS >= MAX_SKS ? '#dc2626' : '#1d2630' }}>
+                  <div className="d-flex justify-content-between mb-2">
+                    <span className="text-muted fw-medium">Total SKS</span>
+                    <span className={`fw-bold ${totalSKS >= MAX_SKS ? 'text-danger' : ''}`}>
                       {totalSKS} / {MAX_SKS}
                     </span>
                   </div>
                   <div className="progress" style={{ height: 10 }}>
-                    <div
-                      className="progress-bar"
-                      style={{ width: `${pct}%`, background: barColor, borderRadius: '50rem', transition: 'width 0.3s' }}
-                    />
+                    <div className={`progress-bar ${barColor}`} style={{ width: `${pct}%`, transition: 'width 0.3s' }} />
                   </div>
                   {totalSKS >= MAX_SKS && (
-                    <div style={{ fontSize: '0.75rem', color: '#dc2626', marginTop: 6, fontWeight: 500 }}>
+                    <div className="text-danger mt-1 fw-medium" style={{ fontSize: '0.75rem' }}>
                       Batas SKS maksimal tercapai!
                     </div>
                   )}
@@ -170,34 +149,33 @@ export default function KRS() {
                 {/* List MK terpilih */}
                 <div style={{ maxHeight: 220, overflowY: 'auto' }} className="mb-4">
                   {selectedKrs.length === 0 ? (
-                    <p className="text-center text-muted py-4" style={{ fontSize: '0.85rem' }}>Belum ada MK dipilih</p>
+                    <p className="text-center text-muted py-4">Belum ada MK dipilih</p>
                   ) : selectedKrs.map((mk) => (
                     <div
                       key={mk.kode}
                       className="d-flex align-items-center justify-content-between py-2"
-                      style={{ borderBottom: '1px solid #f3f5f7', fontSize: '0.85rem' }}
+                      style={{ borderBottom: '1px solid var(--bs-border-color)' }}
                     >
-                      <span className="text-truncate me-2" style={{ color: '#1d2630' }}>{mk.nama}</span>
+                      <span className="text-truncate me-2">{mk.nama}</span>
                       <span className="flex-shrink-0 text-muted" style={{ fontSize: '0.78rem' }}>{mk.sks} SKS</span>
                     </div>
                   ))}
                 </div>
 
-                <div style={{ borderTop: '1px solid #e7eaee', paddingTop: 16 }}>
-                  <div className="d-flex justify-content-between mb-3" style={{ fontSize: '0.875rem' }}>
+                <div style={{ borderTop: '1px solid var(--bs-border-color)', paddingTop: 16 }}>
+                  <div className="d-flex justify-content-between mb-3">
                     <span className="text-muted">Jumlah MK</span>
-                    <span className="fw-semibold" style={{ color: '#1d2630' }}>{selectedKrs.length} mata kuliah</span>
+                    <span className="fw-semibold">{selectedKrs.length} mata kuliah</span>
                   </div>
                   <button
                     onClick={handleSave}
                     disabled={isSaving || selectedKrs.length === 0}
-                    className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
-                    style={{ borderRadius: 10 }}
+                    className="btn btn-primary w-100"
                   >
                     {isSaving ? (
-                      <><span className="spinner-border spinner-border-sm" />Menyimpan...</>
+                      <><span className="spinner-border spinner-border-sm me-2" />Menyimpan...</>
                     ) : (
-                      <><Save size={15} />Simpan KRS</>
+                      <><i className="ti ti-device-floppy me-1" />Simpan KRS</>
                     )}
                   </button>
                 </div>

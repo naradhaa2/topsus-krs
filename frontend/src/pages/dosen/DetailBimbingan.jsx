@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, User, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -38,9 +37,8 @@ export default function DetailBimbingan() {
         <button
           onClick={() => navigate('/dosen/bimbingan')}
           className="btn btn-sm btn-light d-flex align-items-center gap-2 mb-4"
-          style={{ borderRadius: 8, fontSize: '0.85rem', color: '#5b6b79' }}
         >
-          <ArrowLeft size={15} /> Kembali ke Daftar Bimbingan
+          <i className="ti ti-arrow-left" /> Kembali ke Daftar Bimbingan
         </button>
 
         {isLoading ? <LoadingSpinner /> : data ? (
@@ -49,11 +47,8 @@ export default function DetailBimbingan() {
             <div className="card mb-4" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
               <div className="card-body p-4">
                 <div className="d-flex align-items-center gap-3 mb-4">
-                  <div
-                    className="d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{ width: 52, height: 52, background: 'rgba(70,128,255,0.1)', borderRadius: '50%' }}
-                  >
-                    <User size={24} color="#4680ff" />
+                  <div className="avtar avtar-l bg-light-primary flex-shrink-0">
+                    <i className="ti ti-user f-24" />
                   </div>
                   <div>
                     <h2 className="fw-bold mb-0" style={{ fontSize: '1.1rem', color: '#1d2630' }}>{data.nama}</h2>
@@ -72,14 +67,9 @@ export default function DetailBimbingan() {
 
             {/* Tabel KRS */}
             <div className="card table-card">
-              <div
-                className="card-header d-flex align-items-center gap-2"
-                style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}
-              >
-                <BookOpen size={15} color="#4680ff" />
-                <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>
-                  KRS — {data.krs?.jumlah_mk ?? 0} Mata Kuliah
-                </span>
+              <div className="card-header d-flex align-items-center gap-2">
+                <i className="ti ti-book text-primary" />
+                <span className="fw-semibold">KRS — {data.krs?.jumlah_mk ?? 0} Mata Kuliah</span>
               </div>
               <div className="table-responsive">
                 <table className="table table-hover mb-0">
