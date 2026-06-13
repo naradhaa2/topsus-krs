@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Eye, EyeOff, BookOpen, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
 
@@ -12,13 +12,13 @@ const ROLE_HOME = {
 }
 
 export default function Login() {
-  const { login } = useAuth()
-  const navigate  = useNavigate()
-  const [role, setRole]       = useState('mahasiswa')
-  const [form, setForm]       = useState({ email: '', password: '' })
+  const { login }   = useAuth()
+  const navigate    = useNavigate()
+  const [role, setRole]         = useState('mahasiswa')
+  const [form, setForm]         = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors]   = useState({})
+  const [errors, setErrors]     = useState({})
 
   const validate = () => {
     const e = {}
@@ -33,7 +33,6 @@ export default function Login() {
     e.preventDefault()
     const errs = validate()
     if (Object.keys(errs).length) { setErrors(errs); return }
-
     setIsLoading(true)
     try {
       const user = await login(form.email, form.password, role)
@@ -51,26 +50,28 @@ export default function Login() {
     setErrors((er) => ({ ...er, [key]: '' }))
   }
 
-  const inputCls = (key) =>
-    `w-full px-4 py-2.5 border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-      errors[key] ? 'border-red-400 bg-red-50' : 'border-slate-300 bg-white'
-    }`
-
   return (
-    <div className="min-h-screen flex">
-      {/* Branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-blue-800 flex-col items-center justify-center p-12 text-white">
-        <div className="max-w-sm text-center">
-          <div className="w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-xl">
-            <BookOpen className="w-12 h-12" />
+    <div className="auth-wrapper">
+      {/* Left branding panel */}
+      <div className="auth-side">
+        <div className="text-center" style={{ maxWidth: 340 }}>
+          <div
+            className="d-flex align-items-center justify-content-center mx-auto mb-4"
+            style={{ width: 88, height: 88, background: 'var(--pc-primary)', borderRadius: 20, boxShadow: '0 8px 24px rgba(70,128,255,0.4)' }}
+          >
+            <BookOpen size={44} color="#fff" />
           </div>
-          <h1 className="text-4xl font-bold mb-4">Sistem KRS</h1>
-          <p className="text-blue-200 text-lg leading-relaxed">
+          <h1 className="fw-bold mb-3" style={{ fontSize: '2.2rem' }}>Sistem KRS</h1>
+          <p style={{ color: 'rgba(255,255,255,0.65)', lineHeight: 1.7 }}>
             Kelola Kartu Rencana Studi dengan mudah, cepat, dan terintegrasi.
           </p>
-          <div className="mt-12 grid grid-cols-3 gap-3">
+          <div className="d-flex gap-2 justify-content-center mt-5">
             {['Admin', 'Mahasiswa', 'Dosen'].map((r) => (
-              <div key={r} className="bg-blue-700/60 rounded-xl py-3 px-4 text-sm font-semibold">
+              <div
+                key={r}
+                className="px-3 py-2 rounded-3 fw-semibold"
+                style={{ background: 'rgba(255,255,255,0.1)', fontSize: '0.8rem', color: 'rgba(255,255,255,0.85)' }}
+              >
                 {r}
               </div>
             ))}
@@ -78,83 +79,98 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Form panel */}
-      <div className="flex-1 flex items-center justify-center bg-slate-50 p-6">
-        <div className="w-full max-w-md">
+      {/* Right form panel */}
+      <div className="auth-form-side">
+        <div style={{ width: '100%', maxWidth: 440 }}>
+
           {/* Mobile logo */}
-          <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 bg-blue-800 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <BookOpen className="w-8 h-8 text-white" />
+          <div className="text-center mb-4 d-lg-none">
+            <div
+              className="d-flex align-items-center justify-content-center mx-auto mb-3"
+              style={{ width: 60, height: 60, background: 'var(--pc-sidebar-bg)', borderRadius: 14 }}
+            >
+              <BookOpen size={28} color="#fff" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-800">Sistem KRS</h1>
+            <h2 className="fw-bold" style={{ color: '#1d2630' }}>Sistem KRS</h2>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-            <h2 className="text-xl font-bold text-slate-800 mb-1">Masuk ke Akun</h2>
-            <p className="text-slate-500 text-sm mb-6">Pilih role dan masukkan kredensial Anda</p>
+          <div className="card auth-card">
+            <div className="card-body p-4">
+              <h4 className="fw-bold mb-1" style={{ color: '#1d2630' }}>Masuk ke Akun</h4>
+              <p className="text-muted mb-4" style={{ fontSize: '0.85rem' }}>Pilih role dan masukkan kredensial Anda</p>
 
-            {/* Role tabs */}
-            <div className="flex bg-slate-100 rounded-xl p-1 mb-6 gap-1">
-              {ROLES.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => { setRole(r); setErrors({}) }}
-                  className={`flex-1 py-2 px-2 rounded-lg text-sm font-medium capitalize transition-all ${
-                    role === r ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={setF('email')}
-                  placeholder="nama@example.com"
-                  className={inputCls('email')}
-                  autoComplete="email"
-                />
-                {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
+              {/* Role tabs */}
+              <div className="role-tabs mb-4">
+                {ROLES.map((r) => (
+                  <button
+                    key={r}
+                    type="button"
+                    onClick={() => { setRole(r); setErrors({}) }}
+                    className={`role-tab${role === r ? ' active' : ''}`}
+                  >
+                    {r}
+                  </button>
+                ))}
               </div>
 
-              {/* Password */}
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
-                <div className="relative">
+              <form onSubmit={handleSubmit} noValidate>
+                {/* Email */}
+                <div className="mb-3">
+                  <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Email</label>
                   <input
-                    type={showPass ? 'text' : 'password'}
-                    value={form.password}
-                    onChange={setF('password')}
-                    placeholder="••••••••"
-                    className={`${inputCls('password')} pr-10`}
-                    autoComplete="current-password"
+                    type="email"
+                    className={`form-control${errors.email ? ' is-invalid' : ''}`}
+                    value={form.email}
+                    onChange={setF('email')}
+                    placeholder="nama@example.com"
+                    autoComplete="email"
+                    style={{ borderRadius: 10 }}
                   />
+                  {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                </div>
+
+                {/* Password */}
+                <div className="mb-4">
+                  <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Password</label>
+                  <div className="input-group">
+                    <input
+                      type={showPass ? 'text' : 'password'}
+                      className={`form-control${errors.password ? ' is-invalid' : ''}`}
+                      value={form.password}
+                      onChange={setF('password')}
+                      placeholder="••••••••"
+                      autoComplete="current-password"
+                      style={{ borderRadius: '10px 0 0 10px' }}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      style={{ borderRadius: '0 10px 10px 0' }}
+                      onClick={() => setShowPass((v) => !v)}
+                    >
+                      {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                  </div>
+                </div>
+
+                <div className="d-grid">
                   <button
-                    type="button"
-                    onClick={() => setShowPass((v) => !v)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    type="submit"
+                    className="btn btn-primary fw-semibold"
+                    disabled={isLoading}
+                    style={{ borderRadius: 10, padding: '10px' }}
                   >
-                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {isLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" />
+                        Masuk...
+                      </>
+                    ) : 'Masuk'}
                   </button>
                 </div>
-                {errors.password && <p className="text-red-500 text-xs mt-1.5">{errors.password}</p>}
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full py-2.5 bg-blue-700 text-white rounded-xl font-medium text-sm hover:bg-blue-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
-              >
-                {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Masuk...</> : 'Masuk'}
-              </button>
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>

@@ -58,10 +58,7 @@ export default function ManajemenMahasiswa() {
   useEffect(() => { fetchData() }, [fetchData])
   useEffect(() => { fetchDosen() }, [])
 
-  const handleSearch = (value) => {
-    setSearch(value)
-    setPage(1)
-  }
+  const handleSearch = (value) => { setSearch(value); setPage(1) }
 
   const openCreate = () => { setEditData(null); setForm(INIT_FORM); setFormErrors({}); setModalOpen(true) }
   const openEdit   = (row) => {
@@ -98,7 +95,6 @@ export default function ManajemenMahasiswa() {
   }
 
   const setF  = (key) => (e) => { setForm((f) => ({ ...f, [key]: e.target.value })); setFormErrors((er) => ({ ...er, [key]: '' })) }
-  const iCls  = (key) => `w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors[key] ? 'border-red-400' : 'border-slate-300'}`
 
   const columns = [
     { key: 'nim',     label: 'NIM' },
@@ -106,85 +102,118 @@ export default function ManajemenMahasiswa() {
     { key: 'jurusan', label: 'Jurusan' },
     { key: 'semester', label: 'Semester', render: (r) => `Sem ${r.semester}` },
     { key: 'dosen_pa', label: 'Dosen PA', render: (r) => {
-      if (!r.dosen_pa_id) return <span className="text-xs text-red-500 font-medium">Belum ada</span>
+      if (!r.dosen_pa_id) return <span className="badge badge-light-danger" style={{ fontSize: '0.75rem' }}>Belum ada</span>
       const d = dosenList.find((x) => x.id === r.dosen_pa_id)
-      return <span className="text-xs text-slate-600">{d?.nama ?? '–'}</span>
+      return <span style={{ fontSize: '0.82rem', color: '#5b6b79' }}>{d?.nama ?? '–'}</span>
     }},
   ]
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
-        <div className="flex items-center justify-between mb-6">
+      <main className="pc-content">
+        <div className="page-header">
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">Manajemen Mahasiswa</h1>
-            <p className="text-slate-500 text-sm mt-1">Total {total} mahasiswa terdaftar</p>
+            <h1>Manajemen Mahasiswa</h1>
+            <p className="sub mb-0">Total {total} mahasiswa terdaftar</p>
           </div>
-          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-blue-700 text-white rounded-xl text-sm font-medium hover:bg-blue-800 transition-colors">
-            <Plus className="w-4 h-4" /> Tambah Mahasiswa
+          <button onClick={openCreate} className="btn btn-primary d-flex align-items-center gap-2" style={{ borderRadius: 10 }}>
+            <Plus size={16} /> Tambah Mahasiswa
           </button>
         </div>
 
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input value={search} onChange={(e) => handleSearch(e.target.value)} placeholder="Cari nama atau NIM..."
-            className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white" />
+        {/* Search */}
+        <div className="card mb-3" style={{ borderRadius: 10, border: 'none', boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+          <div className="card-body py-2 px-3">
+            <div className="search-wrapper">
+              <Search size={15} className="search-icon" />
+              <input
+                type="text"
+                className="form-control border-0 shadow-none"
+                value={search}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="Cari nama atau NIM..."
+                style={{ borderRadius: 8 }}
+              />
+            </div>
+          </div>
         </div>
 
-        <Table columns={columns} data={data} onEdit={openEdit} onDelete={handleDelete} isLoading={isLoading} emptyMessage="Tidak ada mahasiswa ditemukan" />
+        <Table
+          columns={columns}
+          data={data}
+          onEdit={openEdit}
+          onDelete={handleDelete}
+          isLoading={isLoading}
+          emptyMessage="Tidak ada mahasiswa ditemukan"
+        />
 
+        {/* Pagination */}
         {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-4">
-            <p className="text-sm text-slate-500">Halaman {page} dari {totalPages}</p>
-            <div className="flex gap-2">
-              <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1}
-                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Sebelumnya</button>
-              <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                className="px-3 py-1.5 text-sm border border-slate-300 rounded-lg disabled:opacity-50 hover:bg-slate-50">Selanjutnya</button>
+          <div className="d-flex align-items-center justify-content-between mt-3">
+            <span className="text-muted" style={{ fontSize: '0.85rem' }}>Halaman {page} dari {totalPages}</span>
+            <div className="d-flex gap-2">
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                style={{ borderRadius: 8 }}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                Sebelumnya
+              </button>
+              <button
+                className="btn btn-sm btn-outline-secondary"
+                style={{ borderRadius: 8 }}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+              >
+                Selanjutnya
+              </button>
             </div>
           </div>
         )}
 
-        <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)}
+        <Modal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
           title={editData ? 'Edit Mahasiswa' : 'Tambah Mahasiswa'}
-          onSubmit={handleSubmit} isLoading={isSaving}>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap</label>
-              <input className={iCls('nama')} value={form.nama} onChange={setF('nama')} placeholder="Nama lengkap mahasiswa" />
-              {formErrors.nama && <p className="text-red-500 text-xs mt-1">{formErrors.nama}</p>}
+          onSubmit={handleSubmit}
+          isLoading={isSaving}
+        >
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Nama Lengkap</label>
+            <input className={`form-control${formErrors.nama ? ' is-invalid' : ''}`} value={form.nama} onChange={setF('nama')} placeholder="Nama lengkap mahasiswa" style={{ borderRadius: 8 }} />
+            {formErrors.nama && <div className="invalid-feedback">{formErrors.nama}</div>}
+          </div>
+          <div className="row g-3 mb-3">
+            <div className="col-6">
+              <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>NIM</label>
+              <input className={`form-control${formErrors.nim ? ' is-invalid' : ''}`} value={form.nim} onChange={setF('nim')} placeholder="NIM" style={{ borderRadius: 8 }} />
+              {formErrors.nim && <div className="invalid-feedback">{formErrors.nim}</div>}
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">NIM</label>
-                <input className={iCls('nim')} value={form.nim} onChange={setF('nim')} placeholder="NIM" />
-                {formErrors.nim && <p className="text-red-500 text-xs mt-1">{formErrors.nim}</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Semester</label>
-                <input type="number" min="1" max="14" className={iCls('semester')} value={form.semester} onChange={setF('semester')} />
-                {formErrors.semester && <p className="text-red-500 text-xs mt-1">{formErrors.semester}</p>}
-              </div>
+            <div className="col-6">
+              <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Semester</label>
+              <input type="number" min="1" max="14" className={`form-control${formErrors.semester ? ' is-invalid' : ''}`} value={form.semester} onChange={setF('semester')} style={{ borderRadius: 8 }} />
+              {formErrors.semester && <div className="invalid-feedback">{formErrors.semester}</div>}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email</label>
-              <input type="email" className={iCls('email')} value={form.email} onChange={setF('email')} placeholder="email@example.com" />
-              {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Password {editData && <span className="font-normal text-slate-400">(kosongkan jika tidak diubah)</span>}
-              </label>
-              <input type="password" className={iCls('password')} value={form.password} onChange={setF('password')} placeholder="••••••••" />
-              {formErrors.password && <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Jurusan</label>
-              <select className={iCls('jurusan')} value={form.jurusan} onChange={setF('jurusan')}>
-                {JURUSAN.map((j) => <option key={j}>{j}</option>)}
-              </select>
-            </div>
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Email</label>
+            <input type="email" className={`form-control${formErrors.email ? ' is-invalid' : ''}`} value={form.email} onChange={setF('email')} placeholder="email@example.com" style={{ borderRadius: 8 }} />
+            {formErrors.email && <div className="invalid-feedback">{formErrors.email}</div>}
+          </div>
+          <div className="mb-3">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>
+              Password {editData && <span className="fw-normal text-muted">(kosongkan jika tidak diubah)</span>}
+            </label>
+            <input type="password" className={`form-control${formErrors.password ? ' is-invalid' : ''}`} value={form.password} onChange={setF('password')} placeholder="••••••••" style={{ borderRadius: 8 }} />
+            {formErrors.password && <div className="invalid-feedback">{formErrors.password}</div>}
+          </div>
+          <div className="mb-1">
+            <label className="form-label fw-medium" style={{ fontSize: '0.875rem' }}>Jurusan</label>
+            <select className={`form-select${formErrors.jurusan ? ' is-invalid' : ''}`} value={form.jurusan} onChange={setF('jurusan')} style={{ borderRadius: 8 }}>
+              {JURUSAN.map((j) => <option key={j}>{j}</option>)}
+            </select>
           </div>
         </Modal>
       </main>

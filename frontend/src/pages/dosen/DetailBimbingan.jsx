@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, User, BookOpen, Mail, GraduationCap } from 'lucide-react'
+import { ArrowLeft, User, BookOpen } from 'lucide-react'
 import toast from 'react-hot-toast'
 import Sidebar        from '../../components/Sidebar'
 import LoadingSpinner from '../../components/LoadingSpinner'
@@ -8,9 +8,9 @@ import api            from '../../services/api'
 
 function InfoItem({ label, value }) {
   return (
-    <div className="p-3 bg-slate-50 border border-slate-100 rounded-lg">
-      <p className="text-xs text-slate-500 mb-0.5">{label}</p>
-      <p className="text-sm font-semibold text-slate-800">{value}</p>
+    <div className="p-3 rounded-3" style={{ background: '#f8f9fa', border: '1px solid #f0f1f3' }}>
+      <div style={{ fontSize: '0.72rem', color: '#5b6b79', marginBottom: 2 }}>{label}</div>
+      <div className="fw-semibold" style={{ fontSize: '0.875rem', color: '#1d2630' }}>{value}</div>
     </div>
   )
 }
@@ -32,75 +32,85 @@ export default function DetailBimbingan() {
   }, [id])
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
+      <main className="pc-content">
         <button
           onClick={() => navigate('/dosen/bimbingan')}
-          className="flex items-center gap-2 text-slate-500 hover:text-blue-700 mb-6 text-sm transition-colors"
+          className="btn btn-sm btn-light d-flex align-items-center gap-2 mb-4"
+          style={{ borderRadius: 8, fontSize: '0.85rem', color: '#5b6b79' }}
         >
-          <ArrowLeft className="w-4 h-4" /> Kembali ke Daftar Bimbingan
+          <ArrowLeft size={15} /> Kembali ke Daftar Bimbingan
         </button>
 
         {isLoading ? <LoadingSpinner /> : data ? (
           <>
             {/* Card info mahasiswa */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
-              <div className="flex items-center gap-4 mb-5">
-                <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <User className="w-7 h-7 text-blue-700" />
+            <div className="card mb-4" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)' }}>
+              <div className="card-body p-4">
+                <div className="d-flex align-items-center gap-3 mb-4">
+                  <div
+                    className="d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{ width: 52, height: 52, background: 'rgba(70,128,255,0.1)', borderRadius: '50%' }}
+                  >
+                    <User size={24} color="#4680ff" />
+                  </div>
+                  <div>
+                    <h2 className="fw-bold mb-0" style={{ fontSize: '1.1rem', color: '#1d2630' }}>{data.nama}</h2>
+                    <p className="text-muted mb-0" style={{ fontSize: '0.82rem' }}>{data.nim} · {data.jurusan}</p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-slate-800">{data.nama}</h1>
-                  <p className="text-slate-500 text-sm">{data.nim} · {data.jurusan}</p>
+
+                <div className="row g-3">
+                  <div className="col-6 col-sm-3"><InfoItem label="Email"     value={data.email} /></div>
+                  <div className="col-6 col-sm-3"><InfoItem label="Jurusan"   value={data.jurusan} /></div>
+                  <div className="col-6 col-sm-3"><InfoItem label="Semester"  value={`Semester ${data.semester}`} /></div>
+                  <div className="col-6 col-sm-3"><InfoItem label="Total SKS" value={`${data.krs?.total_sks ?? 0} SKS`} /></div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <InfoItem label="Email"     value={data.email} />
-                <InfoItem label="Jurusan"   value={data.jurusan} />
-                <InfoItem label="Semester"  value={`Semester ${data.semester}`} />
-                <InfoItem label="Total SKS" value={`${data.krs?.total_sks ?? 0} SKS`} />
               </div>
             </div>
 
             {/* Tabel KRS */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-              <div className="p-4 border-b border-slate-200 flex items-center gap-2 bg-slate-50">
-                <BookOpen className="w-4 h-4 text-blue-600" />
-                <h2 className="font-semibold text-slate-800">
+            <div className="card table-card">
+              <div
+                className="card-header d-flex align-items-center gap-2"
+                style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}
+              >
+                <BookOpen size={15} color="#4680ff" />
+                <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>
                   KRS — {data.krs?.jumlah_mk ?? 0} Mata Kuliah
-                </h2>
+                </span>
               </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="table-responsive">
+                <table className="table table-hover mb-0">
                   <thead>
-                    <tr className="border-b border-slate-200">
-                      {['Kode MK', 'Nama Mata Kuliah', 'SKS', 'Nilai'].map((h) => (
-                        <th key={h} className="px-4 py-3 text-left font-semibold text-slate-600">{h}</th>
-                      ))}
+                    <tr>
+                      <th>Kode MK</th>
+                      <th>Nama Mata Kuliah</th>
+                      <th>SKS</th>
+                      <th>Nilai</th>
                     </tr>
                   </thead>
                   <tbody>
                     {(data.krs?.mata_kuliah ?? []).length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="px-4 py-12 text-center text-slate-400">
+                        <td colSpan={4} className="text-center py-5 text-muted">
                           Mahasiswa belum memilih mata kuliah
                         </td>
                       </tr>
                     ) : (
                       data.krs.mata_kuliah.map((mk) => (
-                        <tr key={mk.kode} className="border-b border-slate-50 hover:bg-slate-50">
-                          <td className="px-4 py-3 font-mono text-xs text-slate-500">{mk.kode}</td>
-                          <td className="px-4 py-3 text-slate-800">{mk.nama}</td>
-                          <td className="px-4 py-3 text-slate-600">{mk.sks} SKS</td>
-                          <td className="px-4 py-3">
+                        <tr key={mk.kode}>
+                          <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#5b6b79' }}>{mk.kode}</td>
+                          <td style={{ color: '#1d2630' }}>{mk.nama}</td>
+                          <td style={{ color: '#5b6b79' }}>{mk.sks} SKS</td>
+                          <td>
                             {mk.nilai ? (
-                              <span className="inline-block text-xs font-bold text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                              <span className="badge badge-light-success rounded-pill fw-bold" style={{ fontSize: '0.78rem' }}>
                                 {mk.nilai}
                               </span>
                             ) : (
-                              <span className="text-xs text-slate-400">Belum ada</span>
+                              <span className="text-muted" style={{ fontSize: '0.82rem' }}>Belum ada</span>
                             )}
                           </td>
                         </tr>
@@ -108,9 +118,9 @@ export default function DetailBimbingan() {
                     )}
                   </tbody>
                   <tfoot>
-                    <tr className="bg-slate-50 border-t-2 border-slate-200">
-                      <td colSpan={2} className="px-4 py-3 font-semibold text-slate-700">Total</td>
-                      <td className="px-4 py-3 font-bold text-blue-700">{data.krs?.total_sks ?? 0} SKS</td>
+                    <tr style={{ background: '#f8f9fa', borderTop: '2px solid #e7eaee' }}>
+                      <td colSpan={2} className="fw-semibold" style={{ padding: '12px 16px', color: '#5b6b79' }}>Total</td>
+                      <td className="fw-bold" style={{ padding: '12px 16px', color: '#4680ff' }}>{data.krs?.total_sks ?? 0} SKS</td>
                       <td />
                     </tr>
                   </tfoot>

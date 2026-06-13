@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react'
 import { Users, UserCheck } from 'lucide-react'
 import toast from 'react-hot-toast'
-import Sidebar      from '../../components/Sidebar'
+import Sidebar        from '../../components/Sidebar'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import api          from '../../services/api'
+import api            from '../../services/api'
 
 export default function PemetaanPA() {
-  const [dosenList,    setDosenList]    = useState([])
-  const [mhsList,      setMhsList]      = useState([])
+  const [dosenList,     setDosenList]     = useState([])
+  const [mhsList,       setMhsList]       = useState([])
   const [selectedDosen, setSelectedDosen] = useState(null)
-  const [selectedMhs,  setSelectedMhs]  = useState([])
-  const [isLoading,    setIsLoading]    = useState(true)
-  const [isAssigning,  setIsAssigning]  = useState(false)
+  const [selectedMhs,   setSelectedMhs]   = useState([])
+  const [isLoading,     setIsLoading]     = useState(true)
+  const [isAssigning,   setIsAssigning]   = useState(false)
 
   const fetchAll = async () => {
     setIsLoading(true)
@@ -20,8 +20,8 @@ export default function PemetaanPA() {
         api.get('/api/admin/dosen',     { params: { per_page: 100 } }),
         api.get('/api/admin/mahasiswa', { params: { per_page: 100 } }),
       ])
-      setDosenList(dosenRes.data.data.dosen    ?? [])
-      setMhsList  (mhsRes.data.data.mahasiswa  ?? [])
+      setDosenList(dosenRes.data.data.dosen   ?? [])
+      setMhsList  (mhsRes.data.data.mahasiswa ?? [])
     } catch { toast.error('Gagal memuat data') }
     finally { setIsLoading(false) }
   }
@@ -32,7 +32,7 @@ export default function PemetaanPA() {
     setSelectedMhs((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id])
 
   const handleAssign = async () => {
-    if (!selectedDosen) { toast.error('Pilih dosen terlebih dahulu'); return }
+    if (!selectedDosen)      { toast.error('Pilih dosen terlebih dahulu'); return }
     if (!selectedMhs.length) { toast.error('Pilih minimal satu mahasiswa'); return }
     setIsAssigning(true)
     try {
@@ -55,121 +55,132 @@ export default function PemetaanPA() {
     } catch (err) { toast.error(err.response?.data?.error || 'Gagal mengubah dosen PA') }
   }
 
-  if (isLoading) return (
-    <div className="min-h-screen bg-slate-100">
-      <Sidebar />
-      <main className="md:ml-60 pt-16 md:pt-6 flex items-center justify-center min-h-screen">
-        <LoadingSpinner />
-      </main>
-    </div>
-  )
-
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="pc-container">
       <Sidebar />
-      <main className="md:ml-60 p-4 md:p-6 pt-16 md:pt-6">
-        <h1 className="text-2xl font-bold text-slate-800 mb-1">Pemetaan Dosen PA</h1>
-        <p className="text-slate-500 text-sm mb-6">Assign atau ubah dosen pembimbing akademik untuk mahasiswa</p>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Panel dosen */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-            <div className="p-4 bg-slate-50 border-b border-slate-200">
-              <h2 className="font-semibold text-slate-800 flex items-center gap-2">
-                <Users className="w-4 h-4" /> Dosen ({dosenList.length})
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">Klik untuk memilih, lalu assign mahasiswa</p>
-            </div>
-
-            <div className="flex-1 divide-y divide-slate-100 overflow-y-auto max-h-80">
-              {dosenList.map((d) => {
-                const count  = mhsList.filter((m) => m.dosen_pa_id === d.id).length
-                const active = selectedDosen?.id === d.id
-                return (
-                  <div
-                    key={d.id}
-                    onClick={() => setSelectedDosen((prev) => prev?.id === d.id ? null : d)}
-                    className={`p-4 cursor-pointer flex items-center justify-between transition-colors ${
-                      active ? 'bg-blue-50 border-l-4 border-blue-700' : 'hover:bg-slate-50'
-                    }`}
-                  >
-                    <div>
-                      <p className="text-sm font-medium text-slate-800">{d.nama}</p>
-                      <p className="text-xs text-slate-400">{d.nidn}</p>
-                    </div>
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full font-semibold">
-                      {count} mhs
-                    </span>
-                  </div>
-                )
-              })}
-            </div>
-
-            {selectedDosen && selectedMhs.length > 0 && (
-              <div className="p-4 border-t border-slate-200">
-                <button
-                  onClick={handleAssign}
-                  disabled={isAssigning}
-                  className="w-full py-2 bg-blue-700 text-white rounded-xl text-sm font-medium hover:bg-blue-800 disabled:opacity-60 transition-colors"
-                >
-                  {isAssigning
-                    ? 'Menyimpan...'
-                    : `Assign ${selectedMhs.length} mhs → ${selectedDosen.nama}`}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Panel mahasiswa */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
-            <div className="p-4 bg-slate-50 border-b border-slate-200">
-              <h2 className="font-semibold text-slate-800 flex items-center gap-2">
-                <UserCheck className="w-4 h-4" /> Mahasiswa ({mhsList.length})
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {selectedDosen ? `Centang untuk assign ke ${selectedDosen.nama}` : 'Ubah PA langsung via dropdown'}
-              </p>
-            </div>
-
-            <div className="flex-1 divide-y divide-slate-100 overflow-y-auto max-h-96">
-              {mhsList.map((m) => {
-                const hasPA    = !!m.dosen_pa_id
-                const isSelected = selectedMhs.includes(m.id)
-                return (
-                  <div key={m.id} className="p-3 flex items-center gap-3">
-                    {selectedDosen && (
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleMhs(m.id)}
-                        className="w-4 h-4 accent-blue-700 flex-shrink-0"
-                      />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm font-medium text-slate-800 truncate">{m.nama}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0 ${
-                          hasPA ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'
-                        }`}>
-                          {hasPA ? 'Ada PA' : 'Belum'}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-400">{m.nim} · {m.jurusan}</p>
-                    </div>
-                    <select
-                      value={m.dosen_pa_id ?? ''}
-                      onChange={(e) => handleReassign(m.id, e.target.value)}
-                      className="text-xs border border-slate-300 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-blue-500 flex-shrink-0 max-w-36"
-                    >
-                      <option value="">-- Pilih PA --</option>
-                      {dosenList.map((d) => <option key={d.id} value={d.id}>{d.nama}</option>)}
-                    </select>
-                  </div>
-                )
-              })}
-            </div>
+      <main className="pc-content">
+        <div className="page-header">
+          <div>
+            <h1>Pemetaan Dosen PA</h1>
+            <p className="sub mb-0">Assign atau ubah dosen pembimbing akademik untuk mahasiswa</p>
           </div>
         </div>
+
+        {isLoading ? <LoadingSpinner /> : (
+          <div className="row g-4">
+            {/* Panel dosen */}
+            <div className="col-lg-6">
+              <div className="card" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center gap-2" style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}>
+                  <Users size={15} className="text-muted" />
+                  <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>Dosen ({dosenList.length})</span>
+                  <small className="text-muted ms-1">— klik untuk memilih</small>
+                </div>
+
+                <div className="list-group list-group-flush" style={{ maxHeight: 340, overflowY: 'auto' }}>
+                  {dosenList.map((d) => {
+                    const count  = mhsList.filter((m) => m.dosen_pa_id === d.id).length
+                    const active = selectedDosen?.id === d.id
+                    return (
+                      <button
+                        key={d.id}
+                        type="button"
+                        onClick={() => setSelectedDosen((prev) => prev?.id === d.id ? null : d)}
+                        className="list-group-item list-group-item-action d-flex align-items-center justify-content-between"
+                        style={{
+                          borderLeft: active ? '3px solid var(--pc-primary)' : '3px solid transparent',
+                          background: active ? 'rgba(70,128,255,0.06)' : '',
+                          padding: '12px 16px',
+                        }}
+                      >
+                        <div className="text-start">
+                          <div className="fw-medium" style={{ fontSize: '0.875rem', color: '#1d2630' }}>{d.nama}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#5b6b79' }}>{d.nidn}</div>
+                        </div>
+                        <span className="badge badge-light-primary rounded-pill" style={{ fontSize: '0.75rem' }}>
+                          {count} mhs
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {selectedDosen && selectedMhs.length > 0 && (
+                  <div className="card-footer" style={{ borderTop: '1px solid #e7eaee', background: '#fff' }}>
+                    <button
+                      onClick={handleAssign}
+                      disabled={isAssigning}
+                      className="btn btn-primary w-100"
+                      style={{ borderRadius: 8 }}
+                    >
+                      {isAssigning
+                        ? <><span className="spinner-border spinner-border-sm me-2" />Menyimpan...</>
+                        : `Assign ${selectedMhs.length} mhs → ${selectedDosen.nama}`}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Panel mahasiswa */}
+            <div className="col-lg-6">
+              <div className="card" style={{ border: 'none', borderRadius: 12, boxShadow: '0 2px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                <div className="card-header d-flex align-items-center gap-2" style={{ background: '#f8f9fa', borderBottom: '1px solid #e7eaee' }}>
+                  <UserCheck size={15} className="text-muted" />
+                  <span className="fw-semibold" style={{ fontSize: '0.9rem' }}>Mahasiswa ({mhsList.length})</span>
+                  <small className="text-muted ms-1">
+                    — {selectedDosen ? `centang untuk assign ke ${selectedDosen.nama}` : 'ubah PA via dropdown'}
+                  </small>
+                </div>
+
+                <div style={{ maxHeight: 420, overflowY: 'auto' }}>
+                  {mhsList.map((m) => {
+                    const hasPA      = !!m.dosen_pa_id
+                    const isSelected = selectedMhs.includes(m.id)
+                    return (
+                      <div
+                        key={m.id}
+                        className="d-flex align-items-center gap-3 px-3 py-2"
+                        style={{ borderBottom: '1px solid #f3f5f7' }}
+                      >
+                        {selectedDosen && (
+                          <input
+                            type="checkbox"
+                            className="form-check-input flex-shrink-0"
+                            checked={isSelected}
+                            onChange={() => toggleMhs(m.id)}
+                            style={{ accentColor: 'var(--pc-primary)', marginTop: 0 }}
+                          />
+                        )}
+                        <div className="flex-grow-1 overflow-hidden">
+                          <div className="d-flex align-items-center gap-2 flex-wrap">
+                            <span className="fw-medium" style={{ fontSize: '0.875rem', color: '#1d2630' }}>{m.nama}</span>
+                            <span
+                              className={`badge rounded-pill ${hasPA ? 'badge-light-success' : 'badge-light-danger'}`}
+                              style={{ fontSize: '0.7rem' }}
+                            >
+                              {hasPA ? 'Ada PA' : 'Belum'}
+                            </span>
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: '#5b6b79' }}>{m.nim} · {m.jurusan}</div>
+                        </div>
+                        <select
+                          value={m.dosen_pa_id ?? ''}
+                          onChange={(e) => handleReassign(m.id, e.target.value)}
+                          className="form-select form-select-sm flex-shrink-0"
+                          style={{ borderRadius: 6, fontSize: '0.78rem', maxWidth: 150 }}
+                        >
+                          <option value="">-- Pilih PA --</option>
+                          {dosenList.map((d) => <option key={d.id} value={d.id}>{d.nama}</option>)}
+                        </select>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
